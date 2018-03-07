@@ -20,7 +20,11 @@ class CreateDocumentsTable extends Migration
             $table->integer('user_id')->unsigned();          // 
             $table->string('document_name');       // 
             $table->string('document_type');                 // 
-            $table->string('document_comment');              //
+            $table->string('document_comment')->nullable();              //
+            $table->string('tl_inspection_status')->nullable();          // 팀장 검사 상태            APR : 승인, REJ : 반려
+            $table->string('dl_inspection_status')->nullable();          // 부장 검사 상태            APR : 승인, REJ : 반려
+            $table->string('sl_inspection_status')->nullable();          // 경영팀장 검사 상태        APR : 승인, REJ : 반려
+            $table->string('status')->default('REG');                    // 문서 현재 상태            REG : 등록, APR : 승인, REJ : 반려
             $table->timestamps();
             $table->foreign('user_id')->references('id')->on('users');
         });
@@ -55,7 +59,6 @@ class CreateDocumentsTable extends Migration
             $table->timestamps();
             $table->foreign('document_id')->references('id')->on('documents');
         });
-
     }
 
     /**

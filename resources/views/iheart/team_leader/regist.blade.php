@@ -6,7 +6,7 @@
 <section class="content-header">
     <h1>
         전자결재 
-        <small>지출품의서</small>
+        <small>지출품의서(등록)-팀장</small>
     </h1>
     <ol class="breadcrumb">
         <li><a href="#"><i class="fa fa-dashboard"></i> Home</a></li>
@@ -17,7 +17,7 @@
 
 <!-- Main content -->
 <section class="content">
-    <form action="{{ route('iheart.document.regist') }}" method="post" enctype="multipart/form-data">
+    <form action="{{ route('iheart.employee.regist') }}" method="post" enctype="multipart/form-data">
         {{ csrf_field() }}
         <div class="row">
             <div class="col-lg-12">

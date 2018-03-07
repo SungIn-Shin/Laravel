@@ -6,7 +6,7 @@
 <section class="content-header">
     <h1>
         전자결재 
-        <small>리스트</small>
+        <small>리스트-일반사용자</small>
     </h1>
     <ol class="breadcrumb">
         <li><a href="#"><i class="fa fa-dashboard"></i> Home</a></li>
@@ -33,12 +33,12 @@
                             </thead>
                             <tbody>
                                 @foreach($documents as $document)
-                                <tr>
-                                    <td>{{ $document->document_name }}</td>
-                                    <td>{{ $document->document_type }}</td>
-                                    <td>{{ $document->created_at }}</td>
-                                    <td>{{ $document->user->email}}</td>
-                                </tr>                            
+                                    <tr>
+                                        <td><a href="{{ route('iheart.employee.detail', $document->id) }}">  {{ $document->document_name }} </a></td> 
+                                        <td>{{ $document->document_type }}</td>
+                                        <td>{{ $document->created_at }}</td>
+                                        <td>{{ $document->status}}</td>
+                                    </tr>      
                                 @endforeach        
                             </tbody>
                         </table>

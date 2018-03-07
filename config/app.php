@@ -180,6 +180,8 @@ return [
         Unisharp\Ckeditor\ServiceProvider::class,
         // Role..
         Zizaco\Entrust\EntrustServiceProvider::class,
+
+        Barryvdh\Debugbar\ServiceProvider::class,
     ],
 
     /*
@@ -231,6 +233,8 @@ return [
         
         // Role..
         'Entrust'   => Zizaco\Entrust\EntrustFacade::class,
+
+        'Debugbar' => Barryvdh\Debugbar\Facade::class,
     ],
 
 ];

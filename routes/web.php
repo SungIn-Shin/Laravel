@@ -25,16 +25,34 @@ Route::group(['prefix' => 'iheart'], function (){
         return view('iheart.dashboard');
     })->name('iheart.dashboard');
 
-    Route::get('regist', function() {
-        return view('iheart.regist');
-    })->name('ihart.regist');
-
-    Route::post('regist', 'DocumentController@store')->name('iheart.document.regist');
-
-    Route::get('list', 'DocumentController@index')->name('iheart.document.list');
-
+    // 일반 사원
     Route::group(['prefix' => 'employee', 'middleware' => ['role:employee']], function() {
-        
+        Route::get('regist', function() {
+            return view('iheart.employee.regist');
+        })->name('ihart.employee.regist');
+    
+        Route::post('regist', 'DocumentController@store')->name('iheart.employee.regist');
+    
+        Route::get('list', 'DocumentController@index')->name('iheart.employee.list');
+    
+        Route::get('detail/{document_id}', 'DocumentController@detail')->name('iheart.employee.detail');
+    });
+
+    // 팀장
+    Route::group(['prefix' => 'team_leader', 'middleware' => ['role:team_leader']], function() {
+        Route::get('regist', function() {
+            return view('iheart.team_leader.regist');
+        })->name('ihart.team_leader.regist');
+    
+        Route::post('regist', 'DocumentController@store')->name('iheart.team_leader.regist');
+    
+        Route::get('list', 'DocumentController@teamLeaderIndex')->name('iheart.team_leader.list');
+    
+        Route::get('detail/{document_id}', 'DocumentController@teamLeaderDetail')->name('iheart.team_leader.detail');
+        // 반려 처리
+        Route::post('reject', 'DocumentController@teamLeaderReject')->name('iheart.team_leader.reject');
+        // 승인 처리
+        Route::post('apr', 'DocumentController@teamLeaderApr')->name('iheart.team_leader.apr');
     });
 });
 

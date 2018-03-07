@@ -1,4 +1,5 @@
 <?php
+use App\Team;
 use App\User;
 use App\Role;
 use App\RoleUser;
@@ -15,12 +16,13 @@ class AddSalseLeaderUserToUserTable extends Migration
      */
     public function up()
     {
-        // 사업부장 계정 삽입
-        $salse_leader = [  'name'  => 'salse_leader', 
-                    'email' => 'salse_leader@i-heart.co.kr', 
-                    'password' => bcrypt('salse_leader')
-                 ];        
-        User::create($salse_leader);        
+        // 사업팀장 삽입
+        $salse_leader = new User([   'name'  => 'salse_leader',
+                                    'email' => 'salse_leader@i-heart.co.kr', 
+                                    'password' => bcrypt('salse_leader')
+        ]);        
+        $salse_team = Team::find(3);
+        $salse_team->users()->save($salse_leader);
 
         // 사업부장 권한 추가        
         $salse_leader_role = new Role;

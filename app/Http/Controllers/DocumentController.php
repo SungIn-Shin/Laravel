@@ -2,7 +2,9 @@
 
 namespace App\Http\Controllers;
 
+use App\User;
 use App\Document;
+use App\Comment;
 use App\Attachment;
 use App\ExpenditureHistory;
 use Illuminate\Support\Facades\Storage;
@@ -21,7 +23,55 @@ class DocumentController extends Controller
     {
         $documents = Document::paginate(2);        
         // dump($documents);
-        return view('iheart.list')->with(['documents' => $documents]);
+        return view('iheart.employee.list')->with(['documents' => $documents]);
+    }
+
+    public function teamLeaderIndex() {
+        // 1. 접속 유저의 team_id 획득
+        $team_id = Auth::user()->team_id;
+        // 2. 해당 team_id를 가지고 있는 user를 검색.
+        $users = User::where('team_id' , $team_id)->paginate(1);                
+        return view('iheart.team_leader.list')->with(['users' => $users]);
+    }
+
+    public function teamLeaderDetail($document_id) {
+
+        $document = Document::find($document_id);
+        // dump($document);
+        return view('iheart.team_leader.detail')->with('document', $document);
+    }
+
+    //반려처리
+    public function teamLeaderReject(Request $request) {
+        $document_id = $request->document_id;
+        $document = Document::find($document_id);
+        $document->tl_inspection_status = "REJ";
+        $document->save();
+
+        $comment = new Comment;
+        $comment->writer    = Auth::user()->name;
+        $comment->title     = $request->title;
+        $comment->content   = $request->content;
+        $document->comments()->save($comment);
+
+        return redirect()->route('iheart.team_leader.list');        
+
+    }
+    // 승인처리
+    public function teamLeaderApr(Request $request) {
+        $document_id = $request->document_id;
+        $document = Document::find($document_id);
+        $document->tl_inspection_status = "APR";
+        $document->save();
+        
+        return redirect()->route('iheart.team_leader.list');        
+    }
+
+    public function detail($document_id) {
+        
+        $document = Document::find($document_id);
+        // dump($document);
+        return view('iheart.employee.detail')->with('document', $document);
     }
 
     /**
@@ -76,19 +126,22 @@ class DocumentController extends Controller
         $document->expenditureHistorys()->save($history3);      
 
         // 첨부파일 추가
-        foreach($request->file('files') as $file) {
-            // dump($file);
-            $originName = $file->getClientOriginalName();            
-            $path = $file->store('files');            
-            // dump($originName);
-            // dump($path);
-            $attach = new Attachment;
-            $attach->path = $path;
-            $attach->origin_name = $originName;
-            $document->attachments()->save($attach);
+        
+        if ($request->hasFile('files')) {
+            foreach($request->file('files') as $file) {
+                // dump($file);
+                $originName = $file->getClientOriginalName();            
+                $path = $file->store('files');            
+                // dump($originName);
+                // dump($path);
+                $attach = new Attachment;
+                $attach->path = $path;
+                $attach->origin_name = $originName;
+                $document->attachments()->save($attach);
+            }
         }
 
-        return view('iheart.list');
+        return redirect()->route('iheart.employee.list');        
     }
 
     /**

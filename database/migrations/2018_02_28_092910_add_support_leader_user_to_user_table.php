@@ -1,4 +1,5 @@
 <?php
+use App\Team;
 use App\User;
 use App\Role;
 use App\RoleUser;
@@ -16,11 +17,13 @@ class AddSupportLeaderUserToUserTable extends Migration
     public function up()
     {
         // 경영지원팀장 계정 삽입
-        $support_leader = [  'name'  => 'support_leader', 
-                    'email' => 'support_leader@i-heart.co.kr', 
-                    'password' => bcrypt('support_leader')
-                 ];        
-        User::create($support_leader);        
+        $support_leader = new User([   'name'  => 'support_leader',
+                                    'email' => 'support_leader@i-heart.co.kr', 
+                                    'password' => bcrypt('support_leader')
+        ]);        
+        $support_team = Team::find(2);
+        $support_team->users()->save($support_leader);
+        
 
         // 경영지원팀장 권한 추가        
         $support_leader_role = new Role;

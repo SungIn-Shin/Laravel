@@ -37,5 +37,8 @@ class User extends Authenticatable
         return $this->hasMany('App\Document');
     }
 
+    public function team() {
+        return $this->belongsTo('App\Team');
+    }
 
 }

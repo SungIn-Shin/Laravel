@@ -1,4 +1,5 @@
 <?php
+use App\Team;
 use App\User;
 use App\Role;
 use App\RoleUser;
@@ -18,11 +19,14 @@ class AddSuperUserToUserTable extends Migration
     public function up()
     {
         // 슈퍼 관리자 계정 삽입.
-        $admin = [  'name'  => 'admin', 
-                    'email' => 'admin@i-heart.co.kr', 
-                    'password' => bcrypt('admin')
-                 ];        
-        User::create($admin);        
+        $super_user = new User([    'name'  => 'admin', 
+                                    'email' => 'admin@i-heart.co.kr', 
+                                    'password' => bcrypt('admin')
+                 ]);        
+        $super_team = Team::find(1);
+        $super_team->users()->save($super_user);
+
+        // User::create($admin);        
 
         // 슈퍼관리자 권한 추가        
         $super_role = new Role;

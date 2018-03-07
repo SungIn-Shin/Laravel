@@ -1,5 +1,5 @@
 <?php
-
+use App\Team;
 use App\User;
 use App\Role;
 use App\RoleUser;
@@ -16,19 +16,17 @@ class AddNomalUserToUserTable extends Migration
      */
     public function up()
     {
-        //
-        // 일반 사용자 계정 삽입
-        $nomal = [  'name'  => 'employee', 
-                    'email' => 'employee@i-heart.co.kr', 
-                    'password' => bcrypt('employee')
-                 ];        
-        User::create($nomal);        
+        $nomal_user = new User([    'name'  => 'employee',
+                                    'email' => 'employee@i-heart.co.kr', 
+                                    'password' => bcrypt('employee')
+        ]);        
+        $nomal_team = Team::find(4);
+        $nomal_team->users()->save($nomal_user);
 
         // 일반 사용자 권한 추가        
         $nomal_role = new Role;
         $nomal_role->name         = 'employee';
         $nomal_role->display_name = '일반사용자'; // optional
-        // Allow a user to...
         $nomal_role->description  = '일반사용자 권한'; // optional
         $nomal_role->save();
         

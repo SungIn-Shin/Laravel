@@ -1,4 +1,5 @@
 <?php
+use App\Team;
 use App\User;
 use App\Role;
 use App\RoleUser;
@@ -15,12 +16,14 @@ class AddTeamLeaderUserToUserTable extends Migration
      */
     public function up()
     {     
-        // 팀장 계정 삽입
-        $team_leader = [  'name'  => 'team_leader', 
-                    'email' => 'team_leader@i-heart.co.kr', 
-                    'password' => bcrypt('team_leader')
-                 ];        
-        User::create($team_leader);        
+        // 개발 팀장 계정 삽입           
+        $team_leader = new User([   'name'  => 'team_leader',
+                                    'email' => 'team_leader@i-heart.co.kr', 
+                                    'password' => bcrypt('team_leader')
+        ]);        
+        $dev_team = Team::find(4);
+        $dev_team->users()->save($team_leader);
+
 
         // 팀장 권한 추가        
         $team_leader_role = new Role;

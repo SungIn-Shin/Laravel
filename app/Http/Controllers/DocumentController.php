@@ -3,10 +3,14 @@
 namespace App\Http\Controllers;
 
 use App\User;
+use App\Team;
 use App\Document;
 use App\Comment;
 use App\Attachment;
 use App\ExpenditureHistory;
+
+use DB;
+use Image;
 use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Facades\File;
 use Illuminate\Support\Facades\Auth;
@@ -15,33 +19,65 @@ use Illuminate\Http\Request;
 class DocumentController extends Controller
 {
     /**
-     * Display a listing of the resource.
-     *
+     * Display a listing of the resource. * * 
      * @return \Illuminate\Http\Response
      */
     public function index()
     {
-        $documents = Document::paginate(2);        
+        $documents = Document::paginate(2);
         // dump($documents);
         return view('iheart.employee.list')->with(['documents' => $documents]);
     }
+    
+    public function supportLeaderIndex(Request $request) { 
+        
+        
+        $searchArray = array();
+        // 조건 검색 추가
+        if($request->has('document_name')){ 
+            $document_name = $request->document_name;
+            array_push($searchArray, array('document_name', 'like', '%'.$document_name.'%'));
+        }
 
-    public function teamLeaderIndex() {
-        // 1. 접속 유저의 team_id 획득
-        $team_id = Auth::user()->team_id;
-        // 2. 해당 team_id를 가지고 있는 user를 검색.
-        $users = User::where('team_id' , $team_id)->paginate(1);                
-        return view('iheart.team_leader.list')->with(['users' => $users]);
+        if($request->has('document_type')){ 
+            $document_type = $request->document_type;
+            array_push($searchArray, array('document_type', 'like', '%'.$document_type.'%'));
+        }
+        dump($searchArray);
+        $documents = null;        
+        if(empty($searchArray)) {
+            $documents = Document::paginate(1);
+        } 
+        else {
+            $documents = Document::where($searchArray)->paginate(1);
+        }
+
+        
+        return view('iheart.support_leader.list')->with(['documents' => $documents]);        
     }
 
-    public function teamLeaderDetail($document_id) {
+    public function teamLeaderIndex() {
+        
+        // 1. 접속 유저의 team_id 획득 $team_id = Auth::user()->team_id;        
+        $team_id = Auth::user()->team_id;
+        $documents = Document::where('team_id', $team_id)->paginate(1);
+        return view('iheart.team_leader.list')->with(['documents' => $documents]);        
+    }
 
+   
+
+    public function teamLeaderDetail($document_id) {
         $document = Document::find($document_id);
-        // dump($document);
         return view('iheart.team_leader.detail')->with('document', $document);
     }
 
-    //반려처리
+    public function supportLeaderDetail($document_id) {
+
+        $document = Document::find($document_id);
+        return view('iheart.support_leader.detail')->with('document', $document);
+    }
+
+    // 팀장 반려처리
     public function teamLeaderReject(Request $request) {
         $document_id = $request->document_id;
         $document = Document::find($document_id);
@@ -55,9 +91,8 @@ class DocumentController extends Controller
         $document->comments()->save($comment);
 
         return redirect()->route('iheart.team_leader.list');        
-
     }
-    // 승인처리
+    // 팀장 승인처리
     public function teamLeaderApr(Request $request) {
         $document_id = $request->document_id;
         $document = Document::find($document_id);
@@ -67,11 +102,39 @@ class DocumentController extends Controller
         return redirect()->route('iheart.team_leader.list');        
     }
 
+    // 경영지원 팀장 반려처리 
+    public function supportLeaderReject(Request $request) {
+        $document_id = $request->document_id;
+        $document = Document::find($document_id);
+        $document->sl_inspection_status = "REJ";
+        $document->save();
+
+        $comment = new Comment;
+        $comment->writer    = Auth::user()->name;
+        $comment->title     = $request->title;
+        $comment->content   = $request->content;
+        $document->comments()->save($comment);
+
+        return redirect()->route('iheart.support_leader.list');        
+    }
+    // 경영지원 팀장 승인처리 
+    public function supportLeaderApr(Request $request) {
+        $document_id = $request->document_id;
+        $document = Document::find($document_id);
+        $document->sl_inspection_status = "APR";
+        $document->save();
+        
+        return redirect()->route('iheart.support_leader.list');        
+    }
+
+
     public function detail($document_id) {
         
-        $document = Document::find($document_id);
+        $document = Document::find($document_id);       
+        
+        
         // dump($document);
-        return view('iheart.employee.detail')->with('document', $document);
+        return view('iheart.employee.detail')->with(['document' => $document]);
     }
 
     /**
@@ -94,10 +157,11 @@ class DocumentController extends Controller
     {
         //
         // 1. 사용자 아이디 획득
-        $user_id = Auth::id();
+        $user = Auth::user();
         // 2. Document 테이블 Insert
         $document = new Document;
-        $document->user_id = $user_id;
+        $document->user_id = $user->id;
+        $document->team_id = $user->team_id;
         $document->document_name = $request->document_name;
         $document->document_type = $request->document_type;
         $document->document_comment = $request->document_comment;
@@ -131,17 +195,20 @@ class DocumentController extends Controller
             foreach($request->file('files') as $file) {
                 // dump($file);
                 $originName = $file->getClientOriginalName();            
-                $path = $file->store('files');            
-                // dump($originName);
-                // dump($path);
+                // // store('save path');  save path = 지정하지 않을 시 storage 폴더 하위에 생성됨.
+                // // 기본 upload 파일 저장
+                $path = $file->store('public/upload');                
                 $attach = new Attachment;
                 $attach->path = $path;
                 $attach->origin_name = $originName;
                 $document->attachments()->save($attach);
             }
         }
-
-        return redirect()->route('iheart.employee.list');        
+        if ($user->hasRole('employee')) {
+            return redirect()->route('iheart.employee.list');        
+        } elseif($user->hasRole('team_leader')) {
+            return redirect()->route('iheart.team_leader.list');        
+        }        
     }
 
     /**

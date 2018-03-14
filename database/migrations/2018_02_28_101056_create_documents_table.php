@@ -18,6 +18,7 @@ class CreateDocumentsTable extends Migration
         Schema::create('documents', function (Blueprint $table) {
             $table->increments('id');                        // pk
             $table->integer('user_id')->unsigned();          // 
+            $table->integer('team_id');          // 
             $table->string('document_name');       // 
             $table->string('document_type');                 // 
             $table->string('document_comment')->nullable();              //
@@ -69,6 +70,7 @@ class CreateDocumentsTable extends Migration
     public function down()
     {
         // // 외래키 때문에 순서 중요함. 자식 테이블먼저 삭제.
+        Schema::dropIfExists('comments');
         Schema::dropIfExists('attachments');
         Schema::dropIfExists('expenditure_historys');
         Schema::dropIfExists('documents');        

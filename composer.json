@@ -7,10 +7,13 @@
     "require": {
         "php": ">=5.6.4",
         "doctrine/dbal": "2.6.*",
+        "intervention/image": "^2.4",
+        "intervention/imagecache": "^2.3",
         "laravel/framework": "5.4.*",
         "laravel/tinker": "~1.0",
         "unisharp/laravel-ckeditor": "^4.7",
-        "zizaco/entrust": "5.2.x-dev"
+        "zizaco/entrust": "5.2.x-dev",
+        "znck/belongs-to-through": "^2.3"
     },
     "require-dev": {
         "barryvdh/laravel-debugbar": "2.4",

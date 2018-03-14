@@ -6,7 +6,7 @@
 <section class="content-header">
     <h1>
         전자결재 
-        <small>리스트-팀장</small>
+        <small>리스트-경영지원팀장</small>
     </h1>
     <ol class="breadcrumb">
         <li><a href="#"><i class="fa fa-dashboard"></i> Home</a></li>
@@ -17,11 +17,30 @@
 
 <!-- Main content -->
 <section class="content">
+
+    <div class="row">
+        <div class="col-lg-12">
+            <div class="box box-primary">  
+                <form action="{{ route('iheart.support_leader.list') }}" action="GET">
+                    <div class="box-body">
+                        {{ csrf_field() }}
+                        <div class="form-group">
+                            <label for="document_name">반려내역</label>
+                            <input type="text" id="document_name" name="document_name" class="form-group">
+                            <label for="document_type">문서분류</label>
+                            <input type="text" id="document_type" name="document_type" class="form-group">
+                            <button type="submit" class="btn btn-default pull-right" id="aprBtn">검색</button> 
+                        </div>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
     <div class="row">
         <div class="col-lg-12">
             <div class="box box-primary">                   
                 <div class="box-body">
-                    <div class="row">                            
+                    <div class="row">               
                         <table class="table">
                             <thead>
                                 <tr>
@@ -37,7 +56,7 @@
                                 @foreach($documents as $document)
                                 @if( $document->tl_inspection_status == "REJ")
                                     <tr>
-                                        <td><a href="{{ route('iheart.team_leader.detail', $document->id) }}">  {{ $document->document_name }} </a></td> 
+                                        <td><a href="{{ route('iheart.support_leader.detail', $document->id) }}">  {{ $document->document_name }} </a></td> 
                                         <td>{{ $document->document_type }}</td>
                                         <td>{{ $document->created_at }}</td>
                                         <td>
@@ -89,7 +108,7 @@
                                     @endforeach
                                 @else
                                     <tr>
-                                        <td><a href="{{ route('iheart.team_leader.detail', $document->id) }}">  {{ $document->document_name }} </a></td> 
+                                        <td><a href="{{ route('iheart.support_leader.detail', $document->id) }}">  {{ $document->document_name }} </a></td> 
                                         <td>{{ $document->document_type }}</td>
                                         <td>{{ $document->created_at }}</td>
                                         <td>
@@ -118,7 +137,7 @@
                                         </td>
                                     </tr>
                                 @endif
-                                @endforeach
+                                @endforeach        
                             </tbody>
                         </table>
                     </div> <!-- /.row -->                

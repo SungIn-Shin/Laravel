@@ -54,6 +54,23 @@ Route::group(['prefix' => 'iheart'], function (){
         // 승인 처리
         Route::post('apr', 'DocumentController@teamLeaderApr')->name('iheart.team_leader.apr');
     });
+
+    // 경영지원 팀장
+    Route::group(['prefix' => 'support_leader', 'middleware' => ['role:support_leader']], function() {
+        Route::get('regist', function() {
+            return view('iheart.support_leader.regist');
+        })->name('ihart.support_leader.regist');
+    
+        Route::post('regist', 'DocumentController@store')->name('iheart.support_leader.regist');
+    
+        Route::get('list', 'DocumentController@supportLeaderIndex')->name('iheart.support_leader.list');
+    
+        Route::get('detail/{document_id}', 'DocumentController@supportLeaderDetail')->name('iheart.support_leader.detail');
+        // 반려 처리
+        Route::post('reject', 'DocumentController@supportLeaderReject')->name('iheart.support_leader.reject');
+        // 승인 처리
+        Route::post('apr', 'DocumentController@supportLeaderApr')->name('iheart.support_leader.apr');
+    });
 });
 
 

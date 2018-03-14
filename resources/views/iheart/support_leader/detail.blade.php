@@ -52,7 +52,7 @@
 <section class="content-header">
     <h1>
         전자결재 
-        <small>지출품의서(상세보기)-팀장</small>
+        <small>지출품의서(상세보기)-경영지원팀장</small>
     </h1>
     <ol class="breadcrumb">
         <li><a href="#"><i class="fa fa-dashboard"></i> Home</a></li>
@@ -133,9 +133,9 @@
                             </ul>
                             @endif
 
-                            @if($document->tl_inspection_status === "APR")
+                            @if($document->sl_inspection_status === "APR")
                             승인됨
-                            @elseif($document->tl_inspection_status === "REJ")                            
+                            @elseif($document->sl_inspection_status === "REJ")                            
                                 @foreach($document->comments as $comment)
                                 <tr class="collapse" id="collapseExample">
                                     <label for="rej_data">반려내역</label>
@@ -163,7 +163,7 @@
                                 @endforeach
                             @else
                             <button type="button" class="btn btn-danger pull-right" data-toggle="modal" data-target="#rejFormModal" >반려</button>
-                            <form action="{{ route('iheart.team_leader.apr') }}" method="post" id="aprForm">  
+                            <form action="{{ route('iheart.support_leader.apr') }}" method="post" id="aprForm">  
                                 {{ csrf_field() }}
                                 <input type="hidden" name="document_id" value="{{$document->id}}">
                                 <button type="submit" class="btn btn-default pull-right" id="aprBtn">승인</button>  
@@ -181,21 +181,6 @@
                                 <input class="img-thumbnail" type="image" src="{{ Storage::url($attachment->path) }}">
                             </a>
                         </div>
-                        {{--  <div class="col-xs-6 col-md-3">
-                            <a href="{{ Storage::url($attachment->path) }}" class="thumbnail" style="cursor:pointer">
-                                <input class="img-thumbnail" target=_blank type="image" src="{{ Storage::url($attachment->path) }}">
-                            </a>
-                        </div>
-                        <div class="col-xs-6 col-md-3">
-                            <a href="{{ Storage::url($attachment->path) }}" class="thumbnail" style="cursor:pointer">
-                                <input class="img-thumbnail" target=_blank type="image" src="{{ Storage::url($attachment->path) }}">
-                            </a>
-                        </div> 
-                        <div class="col-xs-6 col-md-3">
-                            <a href="{{ Storage::url($attachment->path) }}" class="thumbnail" style="cursor:pointer">
-                                <input class="img-thumbnail" target=_blank type="image" src="{{ Storage::url($attachment->path) }}">
-                            </a>
-                        </div>  --}}
                         @endforeach
                         @else 
                         <div class="col-xs-6 col-md-3">
@@ -239,34 +224,6 @@
         </div>
     </div>
 
-    {{--  <!-- 이미지 리뷰 Modal -->
-    <div class="modal fade bs-example-modal-lg" id="imgReviewModal" tabindex="-1" role="dialog" aria-labelledby="imgModalLabel" aria-hidden="true">
-        <div class="modal-dialog modal-lg">
-            <div class="modal-content">
-                <div class="modal-header">
-                    <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
-                    <h4 class="modal-title" id="imgModalLabel">첨부 이미지 리뷰</h4>
-                </div>
-                <div class="modal-body">                      
-                    @if($document->attachments->count() > 0)
-                        <ul class="list-group">
-                        @foreach($document->attachments as $attachment)                                
-                        <input id="imgStage" class="img-thumbnail" type="image" src="{{ Storage::url($attachment->path) }}">                                                                           
-                        @endforeach
-                    </ul>
-                    @else
-                    <ul class="list-group">
-                        <li class="list-group-item">증빙서류 없음</li>                                        
-                    </ul>
-                    @endif
-                </div>
-                <div class="modal-footer">                
-                    modal footer
-                </div>
-            </form>
-            </div>
-        </div>
-    </div>  --}}
 
 </section>
 <!-- /.content -->

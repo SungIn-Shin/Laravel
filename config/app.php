@@ -182,6 +182,10 @@ return [
         Zizaco\Entrust\EntrustServiceProvider::class,
 
         Barryvdh\Debugbar\ServiceProvider::class,
+
+        // Imgaes 핸들링용
+        Intervention\Image\ImageServiceProvider::class, 
+
     ],
 
     /*
@@ -235,6 +239,8 @@ return [
         'Entrust'   => Zizaco\Entrust\EntrustFacade::class,
 
         'Debugbar' => Barryvdh\Debugbar\Facade::class,
+
+        'Image' => Intervention\Image\Facades\Image::class
     ],
 
 ];

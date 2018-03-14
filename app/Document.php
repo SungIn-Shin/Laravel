@@ -6,6 +6,7 @@ use Illuminate\Database\Eloquent\Model;
 
 class Document extends Model
 {
+    use \Znck\Eloquent\Traits\BelongsToThrough;
     // Documents(1) : Expenditure_historys(N) 관계 지정
     public function expenditureHistorys() {
         return $this->hasMany('App\ExpenditureHistory');
@@ -24,5 +25,9 @@ class Document extends Model
     // Documents(N) : users(1) 역관계 지정
     public function user() {
         return $this->belongsTo('App\User');
+    }
+
+    public function team() {
+        return $this->belongsToThrough(Team::class, User::class);
     }
 }

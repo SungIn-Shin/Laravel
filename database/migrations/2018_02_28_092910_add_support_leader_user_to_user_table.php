@@ -35,7 +35,7 @@ class AddSupportLeaderUserToUserTable extends Migration
         
         // 경영지원팀장 => 경영지원팀장 권한 부여
         $role_user = new RoleUser;
-        $role_user->user_id = 5;
+        $role_user->user_id = 8;
         $role_user->role_id = 5;
         $role_user->save();
     }

@@ -24,35 +24,57 @@ class DocumentController extends Controller
      */
     public function index()
     {
-        $documents = Document::paginate(2);
+        $user_id = Auth::user()->id;
+        $documents = Document::where('user_id', $user_id)->orderBy('created_at', 'desc')->paginate(5);
+        // var_dump($documents);
+        // die();
+        // print_r($documents);
+        // die();
         // dump($documents);
+        
         return view('iheart.employee.list')->with(['documents' => $documents]);
+    }
+
+    private function switchInspectionStatus(String $inspecStatus) {
+        switch ($inspecStatus) {
+            case 'APR':
+                return "승인";
+                break;
+            
+            default:
+                return "반려";
+                break;
+        }
+        
     }
     
     public function supportLeaderIndex(Request $request) { 
-        
-        
-        $searchArray = array();
         // 조건 검색 추가
-        if($request->has('document_name')){ 
-            $document_name = $request->document_name;
-            array_push($searchArray, array('document_name', 'like', '%'.$document_name.'%'));
-        }
-
-        if($request->has('document_type')){ 
-            $document_type = $request->document_type;
-            array_push($searchArray, array('document_type', 'like', '%'.$document_type.'%'));
-        }
-        dump($searchArray);
-        $documents = null;        
-        if(empty($searchArray)) {
-            $documents = Document::paginate(1);
-        } 
-        else {
-            $documents = Document::where($searchArray)->paginate(1);
-        }
-
+        $query = Document::query();
         
+        if($request->has('team_id')){ 
+            $team_id = $request->team_id;
+            $query->where('team_id', $team_id);
+        }
+
+        if($request->has('user_name')){
+            $user_name = $request->user_name;
+            $users = User::where('name', 'like', '%'.$user_name.'%')->pluck('id'); // id만 array로 반환해줌.
+            $query->whereIn('user_id', $users);
+        }
+
+        if($request->has('year')) {
+            $year = $request->year;
+            $query->whereYear('created_at', $year);
+        }
+
+        if($request->has('month')) {
+            $month = $request->month;
+            $query->whereMonth('created_at', $month);
+        }
+
+        $documents = $query->orderBy('created_at', 'desc')->paginate(5);
+
         return view('iheart.support_leader.list')->with(['documents' => $documents]);        
     }
 
@@ -60,7 +82,7 @@ class DocumentController extends Controller
         
         // 1. 접속 유저의 team_id 획득 $team_id = Auth::user()->team_id;        
         $team_id = Auth::user()->team_id;
-        $documents = Document::where('team_id', $team_id)->paginate(1);
+        $documents = Document::where('team_id', $team_id)->orderBy('created_at', 'desc')->paginate(5);
         return view('iheart.team_leader.list')->with(['documents' => $documents]);        
     }
 

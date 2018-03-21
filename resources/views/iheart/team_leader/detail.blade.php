@@ -52,7 +52,7 @@
 <section class="content-header">
     <h1>
         전자결재 
-        <small>지출품의서(상세보기)-팀장</small>
+        <small>지출품의서(상세보기)-경영지원팀장</small>
     </h1>
     <ol class="breadcrumb">
         <li><a href="#"><i class="fa fa-dashboard"></i> Home</a></li>
@@ -68,7 +68,24 @@
             <div class="box box-primary">
                 <div class="box-body">
                     <!-- 문서번호, 문서분류, 문서명, 문서설명 row -->
-                    <div class="row">                            
+                    <div class="row">         
+                        <div class="form-group col-lg-4 col-md-6">
+                            <label for="user_name">결재요청자 : </label>
+                            <label id="user_name">{{$document->user->name}}</label>
+                            </select>            
+                        </div>          
+                        <div class="form-group col-lg-4 col-md-6">
+                            <label for="user_name">소속 : </label>
+                            <label id="user_name">{{$document->team->name}}</label>
+                            </select>            
+                        </div>    
+
+                        <div class="form-group col-lg-4 col-md-6 ">
+                            <label for="user_name">결재요청일 : </label>
+                            <label id="user_name">{{$document->created_at}}</label>
+                            </select>            
+                        </div>    
+
                         <div class="form-group col-lg-4 col-md-6">
                             <label for="document_type">문서분류</label>
                             <select class="form-control" name="document_type" id="document_type" >                
@@ -133,9 +150,9 @@
                             </ul>
                             @endif
 
-                            @if($document->tl_inspection_status === "APR")
+                            @if($document->sl_inspection_status === "APR")
                             승인됨
-                            @elseif($document->tl_inspection_status === "REJ")                            
+                            @elseif($document->sl_inspection_status === "REJ" || $document->tl_inspection_status === "REJ")                            
                                 @foreach($document->comments as $comment)
                                 <tr class="collapse" id="collapseExample">
                                     <label for="rej_data">반려내역</label>
@@ -177,25 +194,10 @@
                         @foreach($document->attachments as $attachment)                                    
                         <div class="col-xs-6 col-md-3">
                             <label for="{{ $attachment->origin_name }}">{{ $attachment->origin_name }}</label>
-                            <a id="{{$attachment->origin_name}}" href="{{ Storage::url($attachment->path) }}" class="thumbnail" style="cursor:pointer" onclick="javascript:window.open(this.href);">
+                            <a id="{{$attachment->origin_name}}" class="thumbnail" style="cursor:pointer" onclick="javascript:window.open('{{ Storage::url($attachment->path) }}');">
                                 <input class="img-thumbnail" type="image" src="{{ Storage::url($attachment->path) }}">
                             </a>
                         </div>
-                        {{--  <div class="col-xs-6 col-md-3">
-                            <a href="{{ Storage::url($attachment->path) }}" class="thumbnail" style="cursor:pointer">
-                                <input class="img-thumbnail" target=_blank type="image" src="{{ Storage::url($attachment->path) }}">
-                            </a>
-                        </div>
-                        <div class="col-xs-6 col-md-3">
-                            <a href="{{ Storage::url($attachment->path) }}" class="thumbnail" style="cursor:pointer">
-                                <input class="img-thumbnail" target=_blank type="image" src="{{ Storage::url($attachment->path) }}">
-                            </a>
-                        </div> 
-                        <div class="col-xs-6 col-md-3">
-                            <a href="{{ Storage::url($attachment->path) }}" class="thumbnail" style="cursor:pointer">
-                                <input class="img-thumbnail" target=_blank type="image" src="{{ Storage::url($attachment->path) }}">
-                            </a>
-                        </div>  --}}
                         @endforeach
                         @else 
                         <div class="col-xs-6 col-md-3">
@@ -217,7 +219,7 @@
                 <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
                 <h4 class="modal-title" id="rejModalLabel">전자결재 반려</h4>
             </div>
-            <form action="{{ route('iheart.support_leader.reject') }}" method="post" id="rejectForm">  
+            <form action="{{ route('iheart.team_leader.reject') }}" method="post" id="rejectForm">  
                 {{ csrf_field() }}
                 <input type="hidden" name="document_id" value="{{$document->id}}">
                 <div class="modal-body">      
@@ -239,34 +241,6 @@
         </div>
     </div>
 
-    {{--  <!-- 이미지 리뷰 Modal -->
-    <div class="modal fade bs-example-modal-lg" id="imgReviewModal" tabindex="-1" role="dialog" aria-labelledby="imgModalLabel" aria-hidden="true">
-        <div class="modal-dialog modal-lg">
-            <div class="modal-content">
-                <div class="modal-header">
-                    <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
-                    <h4 class="modal-title" id="imgModalLabel">첨부 이미지 리뷰</h4>
-                </div>
-                <div class="modal-body">                      
-                    @if($document->attachments->count() > 0)
-                        <ul class="list-group">
-                        @foreach($document->attachments as $attachment)                                
-                        <input id="imgStage" class="img-thumbnail" type="image" src="{{ Storage::url($attachment->path) }}">                                                                           
-                        @endforeach
-                    </ul>
-                    @else
-                    <ul class="list-group">
-                        <li class="list-group-item">증빙서류 없음</li>                                        
-                    </ul>
-                    @endif
-                </div>
-                <div class="modal-footer">                
-                    modal footer
-                </div>
-            </form>
-            </div>
-        </div>
-    </div>  --}}
 
 </section>
 <!-- /.content -->

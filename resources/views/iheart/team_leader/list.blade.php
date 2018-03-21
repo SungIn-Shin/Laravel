@@ -15,6 +15,7 @@
     </ol>
 </section>
 
+
 <!-- Main content -->
 <section class="content">
     <div class="row">
@@ -25,46 +26,52 @@
                         <table class="table">
                             <thead>
                                 <tr>
+                                    <th>작성자</th>
                                     <th>문서명</th>
                                     <th>문서분류</th>
                                     <th>등록일시</th>
                                     <th>팀장 승인</th>
                                     <th>지원팀장 승인</th>
                                     <th>최종승인</th>
+                                    <th>반려내역</th>
                                 </tr>                                    
                             </thead>
                             <tbody>
-                                @foreach($documents as $document)
-                                @if( $document->tl_inspection_status == "REJ")
-                                    <tr>
+                                    @foreach($documents as $document)
+                                    @if($document->tl_inspection_status == "APR" && ($document->sl_inspection_status == "APR" || $document->sl_inspection_status == null))
+                                    <tr class="success">
+                                    @elseif($document->tl_inspection_status == "REJ" || $document->sl_inspection_status == "REJ")
+                                    <tr class="danger">
+                                    @else  
+                                    <tr class="warning">
+                                    @endif
+                                        <td>{{ $document->user->name}}</td>
                                         <td><a href="{{ route('iheart.team_leader.detail', $document->id) }}">  {{ $document->document_name }} </a></td> 
                                         <td>{{ $document->document_type }}</td>
                                         <td>{{ $document->created_at }}</td>
                                         <td>
-                                            <a data-toggle="collapse" href="#collapseExample" aria-expanded="true" aria-controls="collapseExample">
-                                                {{ $document->tl_inspection_status}}
-                                            </a>
+                                        
+                                            {{ $document->changeInspectionStatus($document->tl_inspection_status)}}
                                         </td>
                                         <td>
-                                            @isset($document->sl_inspection_status)
-                                            {{$document->sl_inspection_status}}
-                                            @endisset
-                                            @empty($document->sl_inspection_status)
-                                            미승인
-                                            @endempty                                                
+                                            {{$document->changeInspectionStatus($document->sl_inspection_status)}}
                                         </td>
                                         <td>
-                                            @isset($document->sl_inspection_status)
-                                            {{$document->sl_inspection_status}}
-                                            @endisset
-                                            @empty($document->sl_inspection_status)
-                                            미승인
-                                            @endempty
+                                            {{$document->changeStatus($document->status)}}
+                                        </td>
+                                        <td>
+                                            @if($document->tl_inspection_status == "REJ" || $document->sl_inspection_status == "REJ" )
+                                                <a data-toggle="collapse" href="#{{$document->id}}" aria-expanded="true" aria-controls="{{$document->id}}">
+                                                    보기
+                                                </a>
+                                            @else
+                                                내역없음
+                                            @endif
                                         </td>
                                     </tr>
                                     @foreach($document->comments as $comment)
-                                    <tr class="collapse" id="collapseExample">
-                                        <td colspan="6">
+                                    <tr class="collapse" id="{{$document->id}}">
+                                        <td colspan="7">
                                             <label for="rej_data">반려내역</label>
                                             <table class="table" id="rej_data">
                                                 <thead class="bg-danger">
@@ -87,38 +94,8 @@
                                         </td>
                                     </tr>
                                     @endforeach
-                                @else
-                                    <tr>
-                                        <td><a href="{{ route('iheart.team_leader.detail', $document->id) }}">  {{ $document->document_name }} </a></td> 
-                                        <td>{{ $document->document_type }}</td>
-                                        <td>{{ $document->created_at }}</td>
-                                        <td>
-                                            @isset($document->tl_inspection_status)
-                                            {{$document->tl_inspection_status}}
-                                            @endisset
-                                            @empty($document->tl_inspection_status)
-                                            미승인
-                                            @endempty
-                                        </td>
-                                        <td>
-                                            @isset($document->sl_inspection_status)
-                                            {{$document->sl_inspection_status}}
-                                            @endisset
-                                            @empty($document->sl_inspection_status)
-                                            미승인
-                                            @endempty                                                
-                                        </td>
-                                        <td>
-                                            @isset($document->status)
-                                            {{$document->status}}
-                                            @endisset
-                                            @empty($document->status)
-                                            미승인
-                                            @endempty
-                                        </td>
-                                    </tr>
-                                @endif
-                                @endforeach
+    
+                                    @endforeach     
                             </tbody>
                         </table>
                     </div> <!-- /.row -->                

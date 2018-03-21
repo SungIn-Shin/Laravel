@@ -12,7 +12,8 @@
 */
 
 
-Route::get('/', 'HomeController@index')->name('home');
+Route::get('/home', 'HomeController@index')->name('home');
+Route::get('/', 'HomeController@index')->name('index');
 
 
 
@@ -37,7 +38,7 @@ Route::group(['prefix' => 'iheart'], function (){
     
         Route::get('detail/{document_id}', 'DocumentController@detail')->name('iheart.employee.detail');
     });
-
+    
     // 팀장
     Route::group(['prefix' => 'team_leader', 'middleware' => ['role:team_leader']], function() {
         Route::get('regist', function() {

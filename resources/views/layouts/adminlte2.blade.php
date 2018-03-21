@@ -34,8 +34,7 @@
 
   
 
-  <!-- HTML5 Shim and Respond.js IE8 support of HTML5 elements and media queries -->
-  <!-- WARNING: Respond.js doesn't work if you view the page via file:// -->
+
   <!--[if lt IE 9]>
   <script src="https://oss.maxcdn.com/html5shiv/3.7.3/html5shiv.min.js"></script>
   <script src="https://oss.maxcdn.com/respond/1.4.2/respond.min.js"></script>
@@ -318,7 +317,7 @@
           <li class="dropdown user user-menu">
             <a href="#" class="dropdown-toggle" data-toggle="dropdown">
               <img src="{{ asset('dist/img/user2-160x160.jpg') }}" class="user-image" alt="User Image">
-              <span class="hidden-xs">Alexander Pierce</span>
+              <span class="hidden-xs"> {{Auth::user()->name}} </span>
             </a>
             <ul class="dropdown-menu">
               <!-- User image -->
@@ -326,7 +325,7 @@
                 <img src="{{ asset('dist/img/user2-160x160.jpg') }}" class="img-circle" alt="User Image">
 
                 <p>
-                  Alexander Pierce - Web Developer
+                  {{Auth::user()->name}} - {{Auth::user()->team->name}}
                   <small>Member since Nov. 2012</small>
                 </p>
               </li>
@@ -370,7 +369,6 @@
   </header>
 
   @section('sidebar')
-
   <!-- Left side column. contains the logo and sidebar -->
   <aside class="main-sidebar">
     <!-- sidebar: style can be found in sidebar.less -->
@@ -381,7 +379,7 @@
           <img src="{{ asset('dist/img/user2-160x160.jpg') }}" class="img-circle" alt="User Image">
         </div>
         <div class="pull-left info">
-          <p>Alexander Pierce</p>
+          <p> {{Auth::user()->name}} </p>
           <a href="#"><i class="fa fa-circle text-success"></i> Online</a>
         </div>
       </div>
@@ -503,7 +501,7 @@
               <i class="menu-icon fa fa-birthday-cake bg-red"></i>
 
               <div class="menu-info">
-                <h4 class="control-sidebar-subheading">Langdon's Birthday</h4>
+                <h4 class="control-sidebar-subheading">Langdons Birthday</h4>
 
                 <p>Will be 23 on April 24th</p>
               </div>

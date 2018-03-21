@@ -34,7 +34,7 @@ class AddSalseLeaderUserToUserTable extends Migration
         
         // 사업부장 => 사업부장 권한 부여
         $role_user = new RoleUser;
-        $role_user->user_id = 4;
+        $role_user->user_id = 7;
         $role_user->role_id = 4;
         $role_user->save();
     }

@@ -68,7 +68,24 @@
             <div class="box box-primary">
                 <div class="box-body">
                     <!-- 문서번호, 문서분류, 문서명, 문서설명 row -->
-                    <div class="row">                            
+                    <div class="row">         
+                        <div class="form-group col-lg-4 col-md-6">
+                            <label for="user_name">결재요청자 : </label>
+                            <label id="user_name">{{$document->user->name}}</label>
+                            </select>            
+                        </div>          
+                        <div class="form-group col-lg-4 col-md-6">
+                            <label for="user_name">소속 : </label>
+                            <label id="user_name">{{$document->team->name}}</label>
+                            </select>            
+                        </div>    
+
+                        <div class="form-group col-lg-4 col-md-6 ">
+                            <label for="user_name">결재요청일 : </label>
+                            <label id="user_name">{{$document->created_at}}</label>
+                            </select>            
+                        </div>    
+
                         <div class="form-group col-lg-4 col-md-6">
                             <label for="document_type">문서분류</label>
                             <select class="form-control" name="document_type" id="document_type" >                
@@ -135,7 +152,7 @@
 
                             @if($document->sl_inspection_status === "APR")
                             승인됨
-                            @elseif($document->sl_inspection_status === "REJ")                            
+                            @elseif($document->sl_inspection_status === "REJ" || $document->tl_inspection_status === "REJ")                         
                                 @foreach($document->comments as $comment)
                                 <tr class="collapse" id="collapseExample">
                                     <label for="rej_data">반려내역</label>
@@ -177,7 +194,7 @@
                         @foreach($document->attachments as $attachment)                                    
                         <div class="col-xs-6 col-md-3">
                             <label for="{{ $attachment->origin_name }}">{{ $attachment->origin_name }}</label>
-                            <a id="{{$attachment->origin_name}}" href="{{ Storage::url($attachment->path) }}" class="thumbnail" style="cursor:pointer" onclick="javascript:window.open(this.href);">
+                            <a id="{{$attachment->origin_name}}" class="thumbnail" style="cursor:pointer" onclick="javascript:window.open('{{ Storage::url($attachment->path) }}');">
                                 <input class="img-thumbnail" type="image" src="{{ Storage::url($attachment->path) }}">
                             </a>
                         </div>

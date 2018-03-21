@@ -35,7 +35,7 @@ class AddTeamLeaderUserToUserTable extends Migration
         
         // 팀장 => 팀장 권한 부여
         $role_user = new RoleUser;
-        $role_user->user_id = 3;
+        $role_user->user_id = 6;
         $role_user->role_id = 3;
         $role_user->save();
     }

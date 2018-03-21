@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Http\Request;
 
 class HomeController extends Controller
@@ -23,6 +24,23 @@ class HomeController extends Controller
      */
     public function index()
     {
-        return view('home');
+        $user = Auth::user();
+
+        $redirectPath = "";
+        
+        if($user->hasRole('team_leader')) {
+            return redirect()->route('iheart.team_leader.list');
+        }
+        else if ($user->hasRole('employee')) {
+            return redirect()->route('iheart.employee.list');
+        }
+        else if ($user->hasRole('support_leader')) {
+            return redirect()->route('iheart.support_leader.list');
+        }
+        else {
+            return view('home');
+        }
+
+        
     }
 }

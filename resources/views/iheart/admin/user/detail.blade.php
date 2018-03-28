@@ -60,9 +60,9 @@
                                     <input type="password" class="form-control" id="new_password" name="new_password" placeholder="변경할 패스워드를 입력하세요." required>
                                     <input type="password" class="form-control" id="new_password_confirmation" name="new_password_confirmation" placeholder="패스워드를 다시 입력하세요." required>
 
-                                    @if ($errors->has('password'))
+                                    @if ($errors->has('current_password'))
                                     <span class="help-block">
-                                        <strong>{{ $errors->first('password') }}</strong>
+                                        <strong>{{ $errors->first('current_password') }}</strong>
                                     </span>
                                     @endif
                                 </div>

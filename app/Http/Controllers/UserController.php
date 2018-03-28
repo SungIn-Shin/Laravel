@@ -83,16 +83,10 @@ class UserController extends Controller
     // 사용자 정보 수정
     public function updateUser(Request $request) 
     {
-        // Debugbar::info('Hash::check($request->password, Auth::user()->password)');
-        // if (false == Hash::check($request->password, Auth::user()->password)) {
-        //     return Redirect::back()->withErrors(['password', 'Invalid password']);   
-        // }
-        // else {
-        //     $user = User::find(Auth::user()->id);
-        //     $user->password = (new BcryptHasher)->make($request->get('new_password'));
-        //     $user->save();
-        //     return redirect()->route('iheart.admin.users.detail', $id);
-        // }
+        dump(Hash::check($request->current_password, User::where('id', $request->id)->first()->password));
+        if (!Hash::check($request->current_password, User::where('id', $request->id)->first()->password)) {
+            return Redirect::back()->withErrors(['current_password', 'Invalid password']);   
+        }
     }
 
     // 사용자 정렬 수정
@@ -101,6 +95,5 @@ class UserController extends Controller
 
     }
 
-  
-
+ 
 }

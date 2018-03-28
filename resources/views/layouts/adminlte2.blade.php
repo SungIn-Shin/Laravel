@@ -418,11 +418,27 @@
 
         {{--  사용자 정의 사이드바  --}}
         @role('admin')
-        <li>
-          <a href="{{ url('/iheart/admin/users/regist')}}">
-              <i class="fa fa-th"></i> <span>사용자등록 - 관리자</span>                
-          </a>    
-        </li>
+        
+
+        <li class="active treeview">
+            <a href="#">
+              <i class="fa fa-laptop"></i>
+              <span>사용자관리</span>
+              <span class="pull-right-container">
+                <i class="fa fa-angle-left pull-right"></i>
+              </span>
+            </a>
+            <ul class="treeview-menu">
+              <li>
+                  <a href="{{ url('/iheart/admin/users/regist')}}">
+                      <i class="fa fa-circle-o"></i> <span>사용자등록</span>                
+                  </a>    
+                  <a href="{{ route('iheart.admin.users.show')}}">
+                    <i class="fa fa-circle-o"></i> <span>사용자조회</span>                
+                </a>    
+              </li>
+            </ul>
+          </li>
         @endrole
 
         @role('employee')

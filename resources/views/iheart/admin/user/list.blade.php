@@ -1,5 +1,11 @@
 @extends('layouts.adminlte2')
 @section('content')
+<script type="text/javascript">
+    function goDetail(id){
+        var url = "/iheart/admin/users/detail/" + id;
+        window.location='{{url("/iheart/admin/users/detail/'+id+'")}}';
+    }
+</script>
 <!-- Content Wrapper. Contains page content -->
 <div class="content-wrapper">
 <!-- Content Header (Page header) -->
@@ -26,24 +32,37 @@
                             <thead>
                                 <tr>
                                     <tr>
+                                        <th>소속</th>
+                                        <th>이름</th>
                                         <th>직급</th>
                                         <th>직책</th>
-                                        <th>이름</th>
                                         <th>이메일</th>
                                         <th>등록일시</th>
-                                        <th>수정일시</th>
                                         <th>사용여부</th>
                                     </tr>       
                                 </tr>                                    
                             </thead>
                             <tbody>
-                                    <tr>
-                                        
-                                    </tr>
+                                @foreach ($users as $user)
+                                <tr id="tr{{$user->id}}" onclick="location.href='{{url('/iheart/admin/users/detail', $user->id)}}'">
+                                    <td>{{ $user->team->name }}</td>
+                                    <td>{{ $user->name }}</td>
+                                    <td>{{ $user->position_name}}</td>
+                                    <td>{{ $user->job_name}}</td>
+                                    <td>{{ $user->email}}</td>
+                                    <td>{{ $user->created_at}}</td>
+                                    @if (empty($user->deleted_at))
+                                        <td>사용중</td>
+                                    @else
+                                        <td>미사용</td>
+                                    @endif
+                                    
+                                </tr>
+                                @endforeach
                             </tbody>
                         </table>
                     </div> <!-- /.row -->                
-                    {{--  <div class="text-center">{{ $documents->links() }}</div>                          --}}
+                    <div class="text-center">{{ $users->links() }}</div>                        
                 </div>
             </div>          
         </div>                    

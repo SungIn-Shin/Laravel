@@ -3,6 +3,7 @@
 namespace App\Providers;
 
 use Illuminate\Support\ServiceProvider;
+use Validator;
 
 class AppServiceProvider extends ServiceProvider
 {
@@ -14,6 +15,10 @@ class AppServiceProvider extends ServiceProvider
     public function boot()
     {
         //
+        Validator::extend('old_password', function ($attribute, $value, $parameters, $validator) {
+            dd($value);
+            return Hash::check($value, current($parameters));
+        });
     }
 
     /**

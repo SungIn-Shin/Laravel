@@ -19,7 +19,11 @@ class AddTeamLeaderUserToUserTable extends Migration
         // 개발 팀장 계정 삽입           
         $team_leader = new User([   'name'  => 'team_leader',
                                     'email' => 'team_leader@i-heart.co.kr', 
-                                    'password' => bcrypt('team_leader')
+                                    'password' => bcrypt('team_leader'), 
+                                    'position_id' => 4,
+                                    'position_name' => '차장', 
+                                    'job_id' => 4, 
+                                    'job_name' => '팀장'
         ]);        
         $dev_team = Team::find(4);
         $dev_team->users()->save($team_leader);

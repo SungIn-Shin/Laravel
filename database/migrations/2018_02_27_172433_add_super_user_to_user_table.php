@@ -21,7 +21,11 @@ class AddSuperUserToUserTable extends Migration
         // 슈퍼 관리자 계정 삽입.
         $super_user = new User([    'name'  => 'admin', 
                                     'email' => 'admin@i-heart.co.kr', 
-                                    'password' => bcrypt('admin')
+                                    'password' => bcrypt('admin'), 
+                                    'position_id' => 1, 
+                                    'position_name' => '관리자', 
+                                    'job_id' => 1,
+                                    'job_name' => '관리자'
                  ]);        
         $super_team = Team::find(1);
         $super_team->users()->save($super_user);

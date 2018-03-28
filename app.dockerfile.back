@@ -4,7 +4,7 @@ FROM php:7.1.13-fpm
 # php-fpm default WORKDIR is /var/www/html
 # change it to /var/www
 WORKDIR /var/www
-
+ 
 RUN apt-get update && apt-get install -y \
     libmcrypt-dev \
     mysql-client --no-install-recommends \

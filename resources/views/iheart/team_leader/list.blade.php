@@ -1,5 +1,64 @@
 @extends('layouts.adminlte2')
 @section('content')
+
+<script type="text/javascript">
+
+    $(document).ready(function() {
+        $('#tree').treeview({
+            data: getTree(), 
+            showCheckbox : true,
+        });
+        
+        $('#tree').on('nodeChecked', function(event, data) {
+            // Your logic goes here
+            alert('data : ' + data);
+            $('#tree').treeview('removeNode', [ nodes, { silent: true } ]);
+        });
+
+        
+    })
+
+    function getTree() {
+        var tree = [
+                    {
+                        text: "Parent 1",
+                        nodes: [
+                        {
+                            text: "Child 1",
+                            nodes: [
+                            {
+                                text: "Grandchild 1", 
+                            },
+                            {
+                                text: "Grandchild 2"
+                            }
+                            ]
+                        },
+                        {
+                            text: "Child 2"
+                        }
+                        ]
+                    },
+                    {
+                        text: "Parent 2"
+                    },
+                    {
+                        text: "Parent 3"
+                    },
+                    {
+                        text: "Parent 4"
+                    },
+                    {
+                        text: "Parent 5"
+                    }
+                    ];
+        // Some logic to retrieve, or generate tree structure
+        return tree;
+    }
+      
+    
+</script>
+
 <!-- Content Wrapper. Contains page content -->
 <div class="content-wrapper">
 <!-- Content Header (Page header) -->
@@ -18,6 +77,11 @@
 
 <!-- Main content -->
 <section class="content">
+
+    <div class="row col-lg-3">
+        <div id="tree"></div>
+    </div>
+
     <div class="row">
         <div class="col-lg-12">
             <div class="box box-primary">                   

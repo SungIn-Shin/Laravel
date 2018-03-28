@@ -27,8 +27,10 @@ class HomeController extends Controller
         $user = Auth::user();
 
         $redirectPath = "";
-        
-        if($user->hasRole('team_leader')) {
+        if($user->hasRole('admin')) {
+            return redirect()->route('iheart.admin.users.show');
+        }
+        else if($user->hasRole('team_leader')) {
             return redirect()->route('iheart.team_leader.list');
         }
         else if ($user->hasRole('employee')) {

@@ -19,7 +19,11 @@ class AddSalseLeaderUserToUserTable extends Migration
         // 사업팀장 삽입
         $salse_leader = new User([   'name'  => 'salse_leader',
                                     'email' => 'salse_leader@i-heart.co.kr', 
-                                    'password' => bcrypt('salse_leader')
+                                    'password' => bcrypt('salse_leader'), 
+                                    'position_id' => 3,
+                                    'position_name' => '부장', 
+                                    'job_id' => 3,
+                                    'job_name' => '사업부장'
         ]);        
         $salse_team = Team::find(3);
         $salse_team->users()->save($salse_leader);

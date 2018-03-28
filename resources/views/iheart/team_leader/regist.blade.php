@@ -28,25 +28,25 @@
                     <div class="box-body">
                         <!-- 문서번호, 문서분류, 문서명, 문서설명 row -->
                         <div class="row">                            
-                            <div class="form-group col-lg-4 col-md-6">
+                            <div class="form-group col-lg-12">
                                 <label for="document_type">문서분류</label>
                                 <select class="form-control" name="document_type" id="document_type" >                
-                                <option value="지출품의서">지출품의서</option>
+                                    <option value="지출품의서">지출품의서</option>
                                 </select>            
                             </div>          
-                            <div class="form-group col-lg-4 col-md-6">
+                            {{--  <div class="form-group col-lg-4 col-md-6">
                                 <label for="document_name">문서명</label>
                                 <input type="text" class="form-control" name="document_name" id="document_name" placeholder="문서명">
                             </div>
                             <div class="form-group col-lg-4 col-md-6">
                                 <label for="document_comment">문서설명</label>
                                 <input type="text" class="form-control" name="document_comment" id="document_comment" placeholder="문서 설명">
-                            </div>
+                            </div>  --}}
                         </div> <!-- /.row -->              
                         <!-- 지출내역, 증빙서류첨부 row -->
                         <div class="row">
                             <!-- 지출내역 -->
-                            <div class="form-group col-lg-6 col-md-12">                  
+                            <div class="form-group col-lg-12 col-md-12">                  
                                 <label for="exTable">지출내역</label>
                                 <table id="exTable" class="table table-bordered table-hover">
                                 <thead>
@@ -57,45 +57,33 @@
                                     </tr>
                                 </thead>
                                 <tbody>
+                                    @for ($i = 1; $i <= 10; $i++)
                                     <tr>
                                         <td>
-                                            <input type="text" class="form-control" id="item1" name="item1" placeholder="항목1">
+                                            <select class="form-control" name="expenditure[{{ $i }}][item]" id="expenditure[{{ $i }}][item]" >                
+                                                <option value="">선택</option>
+                                                <option value="811">복리후생비</option>
+                                                <option value="812">여비교통비</option>
+                                                <option value="814">통신비</option>
+                                                <option value="824">운반비</option>
+                                                <option value="826">도서인쇄비</option>
+                                                <option value="830">소모품비</option>
+                                                <option value="831">지급수수료(기타)</option>
+                                            </select> 
                                         </td>
                                         <td>
-                                            <input type="text" class="form-control" id="content1" name="content1" placeholder="내용1">
+                                            <input type="text" class="form-control" id="content1" name="expenditure[{{ $i }}][content]" placeholder="내용{{ $i }}">
                                         </td>
                                         <td>
-                                            <input type="number" class="form-control" id="price1" name="price1" placeholder="금액1">
+                                            <input type="number" class="form-control" id="price1" name="expenditure[{{ $i }}][price]" placeholder="금액{{ $i }}">
                                         </td>
                                     </tr>
-
-                                    <tr>
-                                        <td>
-                                            <input type="text" class="form-control" id="item2" name="item2" placeholder="항목2">
-                                        </td>
-                                        <td>
-                                            <input type="text" class="form-control" id="content2" name="content2" placeholder="내용2">
-                                        </td>
-                                        <td>
-                                            <input type="number" class="form-control" id="price2" name="price2" placeholder="금액2">
-                                        </td>
-                                    </tr>
-                                    <tr>
-                                        <td>
-                                            <input type="text" class="form-control" id="item3" name="item3" placeholder="항목3">
-                                        </td>
-                                        <td>
-                                            <input type="text" class="form-control" id="content3" name="content3" placeholder="내용3">
-                                        </td>
-                                        <td>
-                                            <input type="number" class="form-control" id="price3" name="price3" placeholder="금액3">
-                                        </td>
-                                    </tr>
+                                    @endfor
                                 </tbody>
                                 </table>
                             </div>
                             <!-- 증빙서류 -->
-                            <div class="form-group col-lg-6 col-md-12">
+                            <div class="form-group col-lg-12 col-md-12">
                                 <label for="exTable">증빙서류</label>
                                 <input id="multiple" multiple="multiple" class="form-control"  type="file" name="files[]"/>
                                 <textarea id="attachList" class="form-control" rows="3" placeholder="첨부파일 리스트"></textarea>

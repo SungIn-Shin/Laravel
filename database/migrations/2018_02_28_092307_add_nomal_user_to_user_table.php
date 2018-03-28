@@ -26,7 +26,9 @@ class AddNomalUserToUserTable extends Migration
         for ($i = 1; $i <= 4; $i++) {
             $nomal_user = new User([    'name'  => 'employee'.$i,
             'email' => 'employee'.$i.'@i-heart.co.kr', 
-            'password' => bcrypt('employee'.$i)
+            'password' => bcrypt('employee'.$i),
+            'position_id' => 7, 
+            'position_name' => "사원", 
             ]);        
             $nomal_team = Team::find(4);
             $nomal_team->users()->save($nomal_user);

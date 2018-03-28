@@ -79,6 +79,9 @@
   <script src="{{ asset('dist/js/pages/dashboard.js') }}"></script>
   <!-- AdminLTE for demo purposes -->
   <script src="{{ asset('dist/js/demo.js') }}"></script>
+
+  <!-- bootstrap tree - add by ssi 20180326 -->
+  <script src="{{ asset('js/bootstrap-treeview.js') }}"></script>
   
   <script  type="text/javascript">
     $("#multiple").change(function() {
@@ -89,7 +92,6 @@
         $("#attachList").append((i+1) + ".").append(files[i].name).append("\r\n");
         }      
     }); 
-    
   </script>
 
 
@@ -417,8 +419,8 @@
         {{--  사용자 정의 사이드바  --}}
         @role('admin')
         <li>
-          <a href="{{ url('')}}">
-              <i class="fa fa-th"></i> <span>관리자 사이드메뉴 1</span>                
+          <a href="{{ url('/iheart/admin/users/regist')}}">
+              <i class="fa fa-th"></i> <span>사용자등록 - 관리자</span>                
           </a>    
         </li>
         @endrole

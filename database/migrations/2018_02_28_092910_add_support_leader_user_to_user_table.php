@@ -19,7 +19,11 @@ class AddSupportLeaderUserToUserTable extends Migration
         // 경영지원팀장 계정 삽입
         $support_leader = new User([   'name'  => 'support_leader',
                                     'email' => 'support_leader@i-heart.co.kr', 
-                                    'password' => bcrypt('support_leader')
+                                    'password' => bcrypt('support_leader'), 
+                                    'position_id' => 4,
+                                    'position_name' => '차장', 
+                                    'job_id' => 4, 
+                                    'job_name' => '팀장'
         ]);        
         $support_team = Team::find(2);
         $support_team->users()->save($support_leader);

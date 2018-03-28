@@ -15,7 +15,8 @@ class CreateDocumentsTable extends Migration
     {
         
         // 문서 테이블 (지출품의서 등등...)
-        Schema::create('documents', function (Blueprint $table) {
+        Schema::create('documents', function (Blueprint $table) 
+        {
             $table->increments('id');                        // pk
             $table->integer('user_id')->unsigned();          // 
             $table->integer('team_id');          // 
@@ -30,7 +31,8 @@ class CreateDocumentsTable extends Migration
             $table->foreign('user_id')->references('id')->on('users');
         });
 
-        Schema::create('expenditure_historys', function (Blueprint $table) {
+        Schema::create('expenditure_historys', function (Blueprint $table) 
+        {
             $table->increments('id');                       // pk
             $table->integer('document_id')->unsigned();     // documents ID (FK)
             $table->string('item');                         // 항목
@@ -41,7 +43,8 @@ class CreateDocumentsTable extends Migration
             $table->foreign('document_id')->references('id')->on('documents');
         });
 
-        Schema::create('attachments', function (Blueprint $table) {
+        Schema::create('attachments', function (Blueprint $table) 
+        {
             $table->increments('id');                               // pk
             $table->integer('document_id')->unsigned();             // documents ID (FK)
             $table->string('path');                                 // 파일 저장경로 full path
@@ -51,7 +54,8 @@ class CreateDocumentsTable extends Migration
         });
         
         // 문서 반려 코멘트 테이블
-        Schema::create('comments', function(Blueprint $table) {
+        Schema::create('comments', function(Blueprint $table) 
+        {
             $table->increments('id');
             $table->integer('document_id')->unsigned();     // documents ID (FK)
             $table->string('writer');

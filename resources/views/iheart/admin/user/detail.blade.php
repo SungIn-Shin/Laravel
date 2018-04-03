@@ -2,7 +2,27 @@
 
 
 @section('content')
+
+
 <script type="text/javascript">
+    // $(document).ready(function(){
+    // $("#ajaxBtn").on("click", function () {
+    //     var form = $("#updateForm");
+    //     $.ajax({
+    //         url : "{{route('iheart.admin.users.update')}}",
+    //         type : "post", 
+    //         data : form.serialize() , 
+    //         success: function(data)
+    //         {
+    //             alert('success : ' + data);
+    //         }, 
+    //         error: function(error) 
+    //         {
+    //             alert('error : ' +error);
+    //         }
+    //     })
+    // }); 
+});
 </script>
 <!-- Content Wrapper. Contains page content -->
 <div class="content-wrapper">
@@ -21,7 +41,7 @@
 
 <!-- Main content -->
 <section class="content">
-<form action="{{route('iheart.admin.users.update')}}" method="post">
+<form action="{{ route('iheart.admin.users.update') }}" method="post" id="updateForm">
         {{ csrf_field() }}
         <input type="hidden" name="id" value="{{$user->id}}">
         <div class="row">
@@ -31,6 +51,22 @@
                         <h3 class="box-title">전자결재 - 지출품의서</h3>
                     </div>  --}}
                     <div class="box-body">
+                      
+                        <div class="row">
+                            <div class="col-sm-12 col-md-6 col-md-offset-3 col-lg-6 col-lg-offset-3">
+                                @if (session('status'))
+                                    <div class="alert alert-success">
+                                        사용자 정보 수정을 성공했습니다.
+                                    </div>
+                                    <a href="/">Return to homepage</a>
+                                @elseif (session('current_password'))
+                                    <div class="alert alert-danger">
+                                        {{session('current_password')}}
+                                    </div>
+                                @endif
+                            </div>
+                        </div>
+
                         <div class="row">
                             <div class="col-sm-12 col-md-6 col-md-offset-3 col-lg-6 col-lg-offset-3">
                                 <div class="form-group{{ $errors->has('email') ? ' has-error' : '' }}">
@@ -56,13 +92,14 @@
                                 <div class="form-group{{ $errors->has('password') ? ' has-error' : '' }}">
                                     <label for="name">패스워드</label>
                                     <input type="password" class="form-control" id="current_password" name="current_password" placeholder="기존 패스워드를 입력하세요." required>
+                                    
                                     <br/>
-                                    <input type="password" class="form-control" id="new_password" name="new_password" placeholder="변경할 패스워드를 입력하세요." required>
-                                    <input type="password" class="form-control" id="new_password_confirmation" name="new_password_confirmation" placeholder="패스워드를 다시 입력하세요." required>
+                                    <input type="password" class="form-control" id="password" name="password" placeholder="변경할 패스워드를 입력하세요." required>
+                                    <input type="password" class="form-control" id="password_confirmation" name="password_confirmation" placeholder="패스워드를 다시 입력하세요." required>
 
-                                    @if ($errors->has('current_password'))
+                                    @if ($errors->has('password'))
                                     <span class="help-block">
-                                        <strong>{{ $errors->first('current_password') }}</strong>
+                                        <strong>{{ $errors->first('password') }}</strong>
                                     </span>
                                     @endif
                                 </div>
@@ -116,14 +153,16 @@
 
                                 <div class="form-group">
                                     <button type="submit" class="btn btn-default pull-right">수정</button> 
+                                    {{--  <button id="ajaxBtn" class="btn btn-default pull-right">ajax수정</button>   --}}
                                 </div>
                             </div>
-                        </div>
+                        </div> 
                     </div>
                 </div>          
             </div>                    
         </div>
     </form>
+
 </section>
 <!-- /.content -->
 </div>

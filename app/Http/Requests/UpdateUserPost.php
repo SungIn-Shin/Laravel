@@ -13,12 +13,13 @@ class UpdateUserPost extends FormRequest
      */
     public function authorize()
     {
-        $user = Auth::user();   
-        if($user->hasRole('admin')) {
-            return true;
-        } else {
-            return false;
-        } 
+        return true;
+        // $user = Auth::user();   
+        // if($user->hasRole('admin')) {
+        //     return true;
+        // } else {
+        //     return false;
+        // } 
     }
 
     /**
@@ -32,8 +33,8 @@ class UpdateUserPost extends FormRequest
             //
             'email' => 'required', 
             'name'  => 'required|string|max:255',
-            'old_password' => 'required',
-            'new_password' => 'required|confirmed|min:8|max:30'/*|regex:/^.*(?=^.{8,30}$)(?=.*\d)(?=.*[a-zA-Z])(?=.*[!@#$%^&*+=]).*$/'*/, 
+            'current_password' => 'required',
+            'password' => 'required|confirmed|min:8|max:30'/*|regex:/^.*(?=^.{8,30}$)(?=.*\d)(?=.*[a-zA-Z])(?=.*[!@#$%^&*+=]).*$/'*/, 
             'team' => 'required', 
             'position' => 'required'
         ];

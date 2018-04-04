@@ -24,7 +24,7 @@ Route::group(['prefix' => 'iheart'], function (){
 
     // Route::get('dashboard', function(){
     //     return view('iheart.dashboard');
-    // })->name('iheart.dashboard'); git branch test 2 중...
+    // })->name('iheart.dashboard'); test kkk 10:50
 
     // 슈퍼 관리자
     Route::group(['prefix' => 'admin', 'middleware' => ['role:admin']], function () {

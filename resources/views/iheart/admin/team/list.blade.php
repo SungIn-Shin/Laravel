@@ -1,7 +1,6 @@
 @extends('layouts.adminlte2')
 @section('content')
 
-
 <script type="text/javascript">
     $( document ).ready(function() {
 {{-- 

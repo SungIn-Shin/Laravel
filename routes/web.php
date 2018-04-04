@@ -125,16 +125,10 @@ Route::group(['prefix' => 'iheart'], function (){
 //     Route::get('admin/user/registForm', function() {
 //         return view('admin.user.regist');
 //     });
-
-<<<<<<< HEAD
-    Route::post('/user/regist', 'AdminController@regist');
-});
+//     Route::post('/user/regist', 'AdminController@regist');
+// });
 
 
 // 패스워드 만료일 (2018.03.30 KKW)
 Route::get('password/expired', 'Auth\ExpiredPasswordController@expired')->name('password.expired')->middleware('auth');
 Route::post('password/post_expired', 'Auth\ExpiredPasswordController@postExpired')->name('password.post_expired')->middleware('auth');
-=======
-//     Route::post('/user/regist', 'AdminController@regist');
-// });
->>>>>>> c9522f385d8103ef3f4bf0835ee611f3aa1fb923

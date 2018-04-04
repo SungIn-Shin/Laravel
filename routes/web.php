@@ -24,7 +24,7 @@ Route::group(['prefix' => 'iheart'], function (){
 
     // Route::get('dashboard', function(){
     //     return view('iheart.dashboard');
-    // })->name('iheart.dashboard');
+    // })->name('iheart.dashboard');kkwkkwkkw
 
     // 슈퍼 관리자
     Route::group(['prefix' => 'admin', 'middleware' => ['role:admin']], function () {
@@ -125,3 +125,8 @@ Route::group(['prefix' => 'admin', 'middleware' => ['role:admin|team_leader|sals
 
     Route::post('/user/regist', 'AdminController@regist');
 });
+
+
+// 패스워드 만료일 (2018.03.30 KKW)
+Route::get('password/expired', 'Auth\ExpiredPasswordController@expired')->name('password.expired')->middleware('auth');
+Route::post('password/post_expired', 'Auth\ExpiredPasswordController@postExpired')->name('password.post_expired')->middleware('auth');

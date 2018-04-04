@@ -20,18 +20,18 @@ services:
     volumes:
       - ./:/var/www
 
-  db:
-    image: mariadb
-    #restart: always
-    #restart: "no"
-    environment:
-        MYSQL_ROOT_PASSWORD: gktn1004
-    ports:
-        - "3306:3306"
+  # db:
+  #  image: mariadb
+  #  #restart: always
+  #  #restart: "no"
+  #  environment:
+  #      MYSQL_ROOT_PASSWORD: gktn1004
+  #  ports:
+  #      - "3306:3306"
 
-  adminer:
-    image: adminer
-    #restart: always
-    #restart: "no"
-    ports:
-        - "8888:8080"
+  # adminer:
+  #  image: adminer
+  #  #restart: always
+  #  #restart: "no"
+  #  ports:
+  #      - "8888:8080"

@@ -9,6 +9,7 @@ use App\Job;
 use App\Team;
 use Validator;
 use Auth;
+use Response;
 use Hash;
 use App\Http\Requests\StoreUserPost;
 use App\Http\Requests\UpdateUserPost;
@@ -61,7 +62,7 @@ class UserController extends Controller
     // 사용자 리스트 조회
     public function showUsers(Request $request) 
     {
-        $users = User::paginate(5);
+        $users = User::paginate(10);
         return view('iheart.admin.user.list')->with(["users" => $users]);
     }
 
@@ -80,19 +81,45 @@ class UserController extends Controller
                                                     );
     }
 
+    protected $updateUserRules = 
+    [
+        'email' => 'required', 
+        'name'  => 'required|string|max:255',
+        'current_password' => 'required',
+        'password' => 'required|confirmed|min:8|max:30'/*|regex:/^.*(?=^.{8,30}$)(?=.*\d)(?=.*[a-zA-Z])(?=.*[!@#$%^&*+=]).*$/'*/, 
+        'team' => 'required', 
+        'position' => 'required'
+    ];
+
     // 사용자 정보 수정
-    public function updateUser(Request $request) 
+    public function updateUser(UpdateUserPost $request) 
     {
-        // Debugbar::info('Hash::check($request->password, Auth::user()->password)');
-        // if (false == Hash::check($request->password, Auth::user()->password)) {
-        //     return Redirect::back()->withErrors(['password', 'Invalid password']);   
+        // return Response::json(array('code' => '999'));
+        
+        // $validator = Validator::make($request->all(), $this->updateUserRules);
+        // if($validator->fails()) {
+        //     return Response::json(array('errors' => $validator->getMessageBag()->toArray()));
         // }
-        // else {
-        //     $user = User::find(Auth::user()->id);
-        //     $user->password = (new BcryptHasher)->make($request->get('new_password'));
-        //     $user->save();
-        //     return redirect()->route('iheart.admin.users.detail', $id);
-        // }
+
+        $user = User::where('id', $request->id)->first();
+        if (!Hash::check($request->current_password, $user->password)) {
+            return redirect()->back()->with(['current_password' => '기존 패스워드가 일치하지 않습니다.']);
+        }
+
+        $user->name = $request->name;
+        $user->password = bcrypt($request->password);
+        $user->team_id = $request->team;
+
+        $user->position_id = $request->position;
+        $user->position_name = Position::where('id', $request->position)->first()->name;
+        if($request->has('job')) {
+            $user->job_id = $request->job;
+            $user->job_name = Job::where('id', $request->job)->first()->name;
+        }
+
+        $user->save();
+
+        return redirect()->back()->with(['status' => '사용자 정보 수정 성공']);
     }
 
     // 사용자 정렬 수정
@@ -101,6 +128,5 @@ class UserController extends Controller
 
     }
 
-  
-
+ 
 }

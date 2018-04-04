@@ -9,6 +9,11 @@
 
   <!-- Tell the browser to be responsive to screen width -->
   <meta content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no" name="viewport">
+
+  <!--ajax csrf-tocken - add by ssi 2018-04-03 -->
+  <meta name="csrf-token" content="{{ csrf_token() }}">
+
+  
   <!-- Bootstrap 3.3.7 --> 
   <link rel="stylesheet" href="{{ asset('bower_components/bootstrap/dist/css/bootstrap.min.css') }}">
   <!-- Font Awesome -->
@@ -439,6 +444,27 @@
               </li>
             </ul>
           </li>
+
+          <li class="active treeview">
+              <a href="#">
+                <i class="fa fa-laptop"></i>
+                <span>팀 관리</span>
+                <span class="pull-right-container">
+                  <i class="fa fa-angle-left pull-right"></i>
+                </span>
+              </a>
+              <ul class="treeview-menu">
+                <li>
+                    <a href="{{ url('/iheart/admin/teams/regist')}}">
+                        <i class="fa fa-circle-o"></i> <span>팀 등록</span>                
+                    </a>    
+                    <a href="{{ route('iheart.admin.teams.show')}}">
+                      <i class="fa fa-circle-o"></i> <span>팀 조회</span>                
+                  </a>    
+                </li>
+              </ul>
+            </li>
+
         @endrole
 
         @role('employee')

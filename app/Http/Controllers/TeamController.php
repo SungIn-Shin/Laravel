@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
+use App\Team;
 
 class TeamController extends Controller
 {
@@ -15,12 +16,13 @@ class TeamController extends Controller
         if($request->has('name')) { 
             $team->name = $request->name;
         } else {
-            abort(400); // bad request
+            abort(400, "Required String parameter 'name' is not present"); // bad request
         }
 
         if($request->has('location')) {
             $team->location = $request->location;
         }
+        $team->sortKey = Team::max('sortKey') + 1;
 
         $team->save();
 
@@ -29,7 +31,7 @@ class TeamController extends Controller
 
     // 팀 전체조회
     public function show() {
-        $teams = Team::paginate(10);
+        $teams = Team::orderBy('sortKey', 'asc')->get();
         return view('iheart.admin.team.list')->with('teams', $teams);
     }
 
@@ -40,7 +42,7 @@ class TeamController extends Controller
         return view('iheart.admin.team.detail')->with('team', $team);
     }
 
-
+    // 팀 정보 수정
     public function update(Request $request) {
         $id = $request->team_id;
         $team = Team::where('id', $id);
@@ -59,6 +61,30 @@ class TeamController extends Controller
     }
 
     public function delete(Request $request) {
+
+    }
+
+    // 팀 정렬 수정 Ajax
+    public function updateSort(Request $request) {
+        $resJson = array();
+        $resJson["CODE"] = 200;
+        $resJson["DATA"] = "UPDATE SUCCESS";
+        $teamsJsonArr = json_decode($request->getContent());
+        
+        try {
+            foreach($teamsJsonArr as $teamJson) {
+                $team = Team::where('id', $teamJson->teamId)->first();
+                $team->sortKey = $teamJson->sortKey;
+                $team->save();
+            }
+        } catch(\Exception $e) {
+            // DB 오류
+            $resJson["CODE"] = 400;
+            $resJson["ERROR"] = $e->getMessage();
+        }
+        
+
+        return json_encode($resJson);
 
     }
 }

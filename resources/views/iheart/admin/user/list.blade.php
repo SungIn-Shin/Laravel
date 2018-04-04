@@ -1,11 +1,6 @@
 @extends('layouts.adminlte2')
 @section('content')
-<script type="text/javascript">
-    function goDetail(id){
-        var url = "/iheart/admin/users/detail/" + id;
-        window.location='{{url("/iheart/admin/users/detail/'+id+'")}}';
-    }
-</script>
+
 <!-- Content Wrapper. Contains page content -->
 <div class="content-wrapper">
 <!-- Content Header (Page header) -->
@@ -44,7 +39,7 @@
                             </thead>
                             <tbody>
                                 @foreach ($users as $user)
-                                <tr id="tr{{$user->id}}" onclick="location.href='{{url('/iheart/admin/users/detail', $user->id)}}'">
+                                <tr id="tr{{$user->id}}" style="cursor:pointer;" onclick="location.href='{{url('/iheart/admin/users/detail', $user->id)}}'">
                                     <td>{{ $user->team->name }}</td>
                                     <td>{{ $user->name }}</td>
                                     <td>{{ $user->position_name}}</td>

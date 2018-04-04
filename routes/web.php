@@ -24,7 +24,7 @@ Route::group(['prefix' => 'iheart'], function (){
 
     // Route::get('dashboard', function(){
     //     return view('iheart.dashboard');
-    // })->name('iheart.dashboard'); asdfgh
+    // })->name('iheart.dashboard'); ssi 11:23
 
     // 슈퍼 관리자
     Route::group(['prefix' => 'admin', 'middleware' => ['role:admin']], function () {

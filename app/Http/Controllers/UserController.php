@@ -7,6 +7,7 @@ use App\User;
 use App\Position;
 use App\Job;
 use App\Team;
+use App\Role;
 use Validator;
 use Auth;
 use Response;
@@ -20,13 +21,15 @@ class UserController extends Controller
     // 사용자 등록 폼
     public function userRegistForm() 
     {
-        $positions = Position::orderBy('sortkey', 'desc')->get();
-        $jobs = Job::orderBy('sortkey', 'desc')->get();
+        $positions = Position::orderBy('sortkey', 'asc')->get();
+        $jobs = Job::orderBy('sortkey', 'asc')->get();
+        $roles = Role::orderBy('id', 'asc')->get();
         $teams = Team::all();
 
         return view('iheart.admin.user.regist')->with([ 'positions' => $positions, 
-                                                        'jobs' => $jobs, 
-                                                        'teams' => $teams
+                                                        'jobs'      => $jobs, 
+                                                        'roles'     => $roles, 
+                                                        'teams'     => $teams
                                                     ]);
     }
 
@@ -45,7 +48,7 @@ class UserController extends Controller
 
         if($request->has('job')) {
             $user->job_id = $request->job;
-            $job = Job::where('id', $request->job_id)->first();
+            $job = Job::where('id', $request->job)->first();
             $user->job_name = $job->name;
         }
         
@@ -53,8 +56,10 @@ class UserController extends Controller
         $user->email = $request->email;
         $user->password = bcrypt($request->password);
         
-
         $user->save();
+
+        // 사용자 권한 추가
+        $user->attachRole($request->role);
 
         return redirect()->route('iheart.admin.users.show');
     }
@@ -71,12 +76,14 @@ class UserController extends Controller
     {
         $user = User::where('id', $user_id)->first();
 
-        $positions = Position::orderBy('sortkey', 'desc')->get();
-        $jobs = Job::orderBy('sortkey', 'desc')->get();
+        $positions = Position::orderBy('sortkey', 'asc')->get();
+        $jobs = Job::orderBy('sortkey', 'asc')->get();
+        $roles = Role::orderBy('id', 'asc')->get();
         $teams = Team::all();
         return view('iheart.admin.user.detail')->with([ "user" => $user, 
                                                         'positions' => $positions, 
                                                         'jobs' => $jobs, 
+                                                        'roles' => $roles,
                                                         'teams' => $teams]
                                                     );
     }
@@ -92,38 +99,71 @@ class UserController extends Controller
     ];
 
     // 사용자 정보 수정
-    public function updateUser(UpdateUserPost $request) 
+    public function adminUpdateUser(Request $request) 
     {
-        // return Response::json(array('code' => '999'));
-        
-        // $validator = Validator::make($request->all(), $this->updateUserRules);
-        // if($validator->fails()) {
-        //     return Response::json(array('errors' => $validator->getMessageBag()->toArray()));
+        // 기존 패스워드 확인 절차. 슈퍼유저가 일반 사용자 수정시에 필요없어서 주석처리 - modified by ssi - 2018-04-05
+        // $user = User::where('id', $request->id)->first();
+        // if (!Hash::check($request->current_password, $user->password)) {
+        //     return redirect()->back()->with(['current_password' => '기존 패스워드가 일치하지 않습니다.']);
         // }
-
-        $user = User::where('id', $request->id)->first();
-        if (!Hash::check($request->current_password, $user->password)) {
-            return redirect()->back()->with(['current_password' => '기존 패스워드가 일치하지 않습니다.']);
+        $updateUserRules = [];
+        if($request->has('password') || $request->has('password_confirmation')) {
+            // 패스워드 입력시 패스워드도 같이 validation
+            $updateUserRules = [
+                'email'     => 'required', 
+                'name'      => 'required|string|max:255',
+                'password'  => 'required|confirmed|min:8|max:30'/*|regex:/^.*(?=^.{8,30}$)(?=.*\d)(?=.*[a-zA-Z])(?=.*[!@#$%^&*+=]).*$/'*/, 
+                'team'      => 'required', 
+                'position'  => 'required', 
+                'role'      => 'required',
+            ];
+        } else {
+            // 패스워드 미입력시 패스워드는 validation 제외
+            $updateUserRules = [
+                'email'     => 'required', 
+                'name'      => 'required|string|max:255',
+                'team'      => 'required', 
+                'position'  => 'required',
+                'role'      => 'required',
+            ];
         }
 
-        $user->name = $request->name;
-        $user->password = bcrypt($request->password);
-        $user->team_id = $request->team;
+        $validation = Validator::make($request->all(), $updateUserRules);
 
-        $user->position_id = $request->position;
-        $user->position_name = Position::where('id', $request->position)->first()->name;
-        if($request->has('job')) {
-            $user->job_id = $request->job;
-            $user->job_name = Job::where('id', $request->job)->first()->name;
+        if (!$validation->fails()) {
+            $user = User::where('id', $request->id)->first();
+            $user->name = $request->name;
+            if($request->has('password')) {
+                $user->password = bcrypt($request->password);
+            }
+            $user->team_id = $request->team;
+
+            $user->position_id = $request->position;
+            $user->position_name = Position::where('id', $request->position)->first()->name;
+            if($request->has('job')) {
+                $user->job_id = $request->job;
+                $user->job_name = Job::where('id', $request->job)->first()->name;
+            }
+
+            // 사용자의 기존 권한 제거 후 다시 권한 부여.
+            // users(n) : roles(m) 구조이기에 1개의 권한만 주기위한 작업.
+            // 기존 권한 제거
+            $user->detachRoles($user->roles);
+            // 새로운 권한 부여
+            $user->roles()->attach($request->role);
+
+            $user->save();
+
+            return redirect()->back()->with(['status' => '사용자 정보 수정 성공']);
+        } else {
+            return redirect()->back()->withErrors($validation);
         }
 
-        $user->save();
-
-        return redirect()->back()->with(['status' => '사용자 정보 수정 성공']);
+        
     }
 
     // 사용자 정렬 수정
-    public function updateUserSort(Request $request)
+    public function adminUpdateUserSort(Request $request)
     {
 
     }

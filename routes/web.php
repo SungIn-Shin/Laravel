@@ -52,7 +52,7 @@ Route::group(['prefix' => 'iheart'], function (){
             // 사용자 정보 상세보기
             Route::get('detail/{user_id}',  'UserController@detailUser')->name('iheart.admin.users.detail');
             // 사용자 정보 수정
-            Route::post('update',           'UserController@updateUser')->name('iheart.admin.users.update');
+            Route::post('update',           'UserController@adminUpdateUser')->name('iheart.admin.users.update');
         });
 
     });

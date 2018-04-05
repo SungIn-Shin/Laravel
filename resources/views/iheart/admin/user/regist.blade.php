@@ -110,6 +110,24 @@
                                     </select>
                                 </div>
 
+                                <div class="form-group{{ $errors->has('role') ? ' has-error' : '' }}">
+                                    <label for="role">권한</label>
+                                    <select id="role" name="role" class="form-control">
+                                        <option value="">권한 선택</option>
+                                        @foreach ($roles as $role)
+                                            <option value="{{$role->id}}" {{  old('role') == $role->id ? 'selected' : '' }}>
+                                                {{$role->description}}
+                                            </option>
+                                        @endforeach
+                                    </select>
+
+                                    @if ($errors->has('role'))
+                                    <span class="help-block">
+                                        <strong>{{ $errors->first('role') }}</strong>
+                                    </span>
+                                    @endif
+                                </div>
+
                                 <div class="form-group">
                                     <button type="submit" class="btn btn-default pull-right">제출</button> 
                                 </div>

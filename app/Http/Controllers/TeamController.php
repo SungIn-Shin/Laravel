@@ -12,13 +12,18 @@ class TeamController extends Controller
     }
     // 팀 등록
     public function regist(Request $request) {
-        $team = new Team;
-        if($request->has('name')) { 
-            $team->name = $request->name;
-        } else {
-            abort(400, "Required String parameter 'name' is not present"); // bad request
-        }
+        // form validation
+        $errMessages = [
+            'name.required'    => '팀 이름은 필수 입력 항목입니다.', 
+            'name.unique'      => '이미 사용중인 이름입니다.', 
+            'name.max'         => '이름은 255글자를 넘을 수 없습니다.',
+        ];
+        $this->validate($request, [
+            'name' => 'required|unique:teams|max:255'
+        ], $errMessages);
 
+        $team = new Team;
+        $team->name = $request->name;
         if($request->has('location')) {
             $team->location = $request->location;
         }

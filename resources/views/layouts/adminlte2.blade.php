@@ -455,11 +455,8 @@
               </a>
               <ul class="treeview-menu">
                 <li>
-                    <a href="{{ url('/iheart/admin/teams/regist')}}">
-                        <i class="fa fa-circle-o"></i> <span>팀 등록</span>                
-                    </a>    
                     <a href="{{ route('iheart.admin.teams.show')}}">
-                      <i class="fa fa-circle-o"></i> <span>팀 조회</span>                
+                      <i class="fa fa-circle-o"></i> <span>팀 관리</span>                
                   </a>    
                 </li>
               </ul>

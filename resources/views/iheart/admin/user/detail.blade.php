@@ -5,24 +5,7 @@
 
 
 <script type="text/javascript">
-    // $(document).ready(function(){
-    // $("#ajaxBtn").on("click", function () {
-    //     var form = $("#updateForm");
-    //     $.ajax({
-    //         url : "{{route('iheart.admin.users.update')}}",
-    //         type : "post", 
-    //         data : form.serialize() , 
-    //         success: function(data)
-    //         {
-    //             alert('success : ' + data);
-    //         }, 
-    //         error: function(error) 
-    //         {
-    //             alert('error : ' +error);
-    //         }
-    //     })
-    // }); 
-});
+
 </script>
 <!-- Content Wrapper. Contains page content -->
 <div class="content-wrapper">
@@ -59,10 +42,10 @@
                                         사용자 정보 수정을 성공했습니다.
                                     </div>
                                     <a href="/">Return to homepage</a>
-                                @elseif (session('current_password'))
+                                {{-- @elseif (session('current_password'))
                                     <div class="alert alert-danger">
                                         {{session('current_password')}}
-                                    </div>
+                                    </div> --}}
                                 @endif
                             </div>
                         </div>
@@ -91,17 +74,15 @@
                                 </div>
                                 <div class="form-group{{ $errors->has('password') ? ' has-error' : '' }}">
                                     <label for="name">패스워드</label>
-                                    <input type="password" class="form-control" id="current_password" name="current_password" placeholder="기존 패스워드를 입력하세요." required>
-                                    
+                                    <input type="password" class="form-control" id="password" name="password" placeholder="변경할 패스워드를 입력하세요.">
                                     <br/>
-                                    <input type="password" class="form-control" id="password" name="password" placeholder="변경할 패스워드를 입력하세요." required>
-                                    <input type="password" class="form-control" id="password_confirmation" name="password_confirmation" placeholder="패스워드를 다시 입력하세요." required>
-
+                                    <input type="password" class="form-control" id="password_confirmation" name="password_confirmation" placeholder="패스워드를 다시 입력하세요." >
                                     @if ($errors->has('password'))
                                     <span class="help-block">
                                         <strong>{{ $errors->first('password') }}</strong>
                                     </span>
                                     @endif
+
                                 </div>
 
                                 <div class="form-group{{ $errors->has('team') ? ' has-error' : '' }}">
@@ -146,6 +127,18 @@
                                         @foreach ($jobs as $job)
                                             <option value="{{$job->id}}" {{ $user->job_id == $job->id ? 'selected' : '' }}>
                                                 {{$job->name}}
+                                            </option>
+                                        @endforeach
+                                    </select>
+                                </div>
+
+                                <div class="form-group">
+                                    <label for="role">권한</label>
+                                    <select id="role" name="role" class="form-control">
+                                        <option value="">권한 선택</option>
+                                        @foreach ($roles as $role)
+                                            <option value="{{$role->id}}" {{ $user->hasRole($role->name) ? 'selected' : '' }}>
+                                                {{$role->description}}
                                             </option>
                                         @endforeach
                                     </select>

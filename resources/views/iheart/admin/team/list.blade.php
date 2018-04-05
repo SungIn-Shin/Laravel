@@ -86,23 +86,68 @@
 
 <!-- Main content -->
 <section class="content">
+
     <div class="row">
         <div class="col-lg-6 col-md-12">
-            <div class="box box-primary">                   
+            <!--팀 등록-->
+            <div class="box box-primary">      
+                <div class="box-header with-border">
+                    <h3 class="box-title">
+                        팀 등록
+                    </h3>
+                </div>             
+                <div class="box-body">
+                    <form action="{{route('iheart.admin.teams.regist')}}" method="POST">
+                        {{ csrf_field() }}
+                        <div class="row">      
+                            <div class="form-group{{ $errors->has('name') ? ' has-error' : '' }} col-lg-12 col-md-12">                     
+                                <label for="team_name">팀명</label>
+                                <input type="text" class="form-control" name="name" id="team_name" placeholder="팀 이름을 입력하세요." value="{{old('name')}}">
+
+                                @if ($errors->has('name'))
+                                <span class="help-block">
+                                    <strong>{{ $errors->first('name') }}</strong>
+                                </span>
+                                @endif
+                            </div>
+
+                            
+
+                            <div class="form-group col-lg-12 col-md-12">
+                                <label for="location">위치</label>
+                                <input type="text" class="form-control" name="location" id="location" placeholder="팀이 근무하는 위치를 입력하세요.">
+                            </div>
+                        </div> <!-- /.row --> 
+                        
+                        <div class="text-center">
+                            <input class="btn btn-default" type="submit" id="registBtn" value="등록">
+                        </div>       
+                    </form>
+                </div>
+            </div>          
+        </div>     
+        <!-- 팀 정렬 변경 Row-->
+        <div class="col-lg-6 col-md-12">
+            <div class="box box-primary">  
+                <div class="box-header with-border">
+                    <h3 class="box-title">
+                        팀 정렬
+                    </h3>
+                </div>                 
                 <div class="box-body">
                         <div class="row">                            
                             <table class="table" id="teamTable">
                                 <thead>
                                     <tr>
                                         <tr>
-                                            <th>순서</th>
-                                            <th>팀명</th>
-                                            <th>생성일자</th>
-                                            <th>순서변경</th>
+                                            <th class="text-center">순서</th>
+                                            <th class="text-center">팀명</th>
+                                            <th class="text-center">생성일자</th>
+                                            <th class="text-center">순서변경</th>
                                         </tr>       
                                     </tr>                                    
                                 </thead>
-                                <tbody>
+                                <tbody  class="text-center">
                                     @foreach ($teams as $team)
                                         <tr id="{{$team->id}}">
                                             <td>{{ $team->sortkey}}</td>

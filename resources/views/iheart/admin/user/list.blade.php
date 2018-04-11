@@ -42,8 +42,8 @@
                                 <tr id="tr{{$user->id}}" style="cursor:pointer;" onclick="location.href='{{url('/iheart/admin/users/detail', $user->id)}}'">
                                     <td>{{ $user->team->name }}</td>
                                     <td>{{ $user->name }}</td>
+                                    <td>{{ $user->rank_name}}</td>
                                     <td>{{ $user->position_name}}</td>
-                                    <td>{{ $user->job_name}}</td>
                                     <td>{{ $user->email}}</td>
                                     <td>{{ $user->created_at}}</td>
                                     @if (empty($user->deleted_at))

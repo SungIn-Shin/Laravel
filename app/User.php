@@ -23,7 +23,7 @@ class User extends Authenticatable
      * @var array
      */
     protected $fillable = [
-        'name', 'email', 'password', 'position_id', 'position_name', 'job_id', 'job_name', 'created_at', 'updated_at', 'password_changed_at'
+        'name', 'email', 'password', 'rank_id', 'rank_name', 'position_id', 'position_name', 'created_at', 'updated_at', 'password_changed_at'
     ];
 
     /**
@@ -45,8 +45,8 @@ class User extends Authenticatable
         return $this->belongsTo('App\Team');
     }
 
-    public function job() {
-        return $this->belongsTo('App\Job');
+    public function rank() {
+        return $this->belongsTo('App\Rank');
     }
 
     public function position() {

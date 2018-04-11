@@ -31,18 +31,6 @@ class CreateDocumentsTable extends Migration
             $table->foreign('user_id')->references('id')->on('users');
         });
 
-        Schema::create('expenditure_historys', function (Blueprint $table) 
-        {
-            $table->increments('id');                       // pk
-            $table->integer('document_id')->unsigned();     // documents ID (FK)
-            $table->string('item');                         // 항목
-            $table->string('content');                      // 내용
-            $table->string('price');                        // 금액
-            $table->integer('order');                       // 순서
-            $table->timestamps();
-            $table->foreign('document_id')->references('id')->on('documents');
-        });
-
         Schema::create('attachments', function (Blueprint $table) 
         {
             $table->increments('id');                               // pk
@@ -76,7 +64,6 @@ class CreateDocumentsTable extends Migration
         // // 외래키 때문에 순서 중요함. 자식 테이블먼저 삭제.
         Schema::dropIfExists('comments');
         Schema::dropIfExists('attachments');
-        Schema::dropIfExists('expenditure_historys');
         Schema::dropIfExists('documents');        
     }
 

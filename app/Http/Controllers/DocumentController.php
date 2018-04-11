@@ -9,6 +9,7 @@ use App\Comment;
 use App\Attachment;
 use App\ExpenditureHistory;
 use App\ApprovalLine;
+use App\ExpenditureItem;
 
 use DB;
 use Image;
@@ -30,10 +31,17 @@ class DocumentController extends Controller
     public function registForm()
     {
         $user = Auth::user();
+        // 결재라인
+        $document_name = date('Ym') . '_' . $user->name . '_지출품의서';
+        // 지출 항목 List
+        $items = ExpenditureItem::all(); 
+
         if($user->hasRole('employee')) {
-            return view('iheart.employee.regist');
+            return view('iheart.employee.regist')->with(['document_name' => $document_name, 'items' => $items]);
         } else if ($user->hasRole('team_leader')) {
-            return view('iheart.team_leader.regist');
+            return view('iheart.team_leader.regist')->with(['document_name' => $document_name, 'items' => $items]);
+        } else if ($user->hasRole('support_leader')) {
+            return view('iheart.support_leader.regist')->with(['document_name' => $document_name, 'items' => $items]);
         } else {
             abort(400);
         }
@@ -63,19 +71,44 @@ class DocumentController extends Controller
         }
     }
 
-    // 경영지원팀장 문서 리스트 조회
+    // 경영지원팀장 지출품의 리스트 조회
     public function selectSupportLeaderDocumentsList(Request $request) 
     { 
-        $documents = new Document;
-        $documents = $documents->selectSupportLeaderDocumentsList($request);
+        $query = Document::query();
+        
+        if($request->has('team_id')){ 
+            $team_id = $request->team_id;
+            $query->where('team_id', $team_id);
+        }
+
+        if($request->has('user_name')){
+            $user_name = $request->user_name;
+            $users = User::where('name', 'like', '%'.$user_name.'%')->pluck('id'); // id만 array로 반환해줌.
+            $query->whereIn('user_id', $users);
+        }
+
+        if($request->has('year')) {
+            $year = $request->year;
+            $query->whereYear('created_at', $year);
+        }
+
+        if($request->has('month')) {
+            $month = $request->month;
+            $query->whereMonth('created_at', $month);
+        }
+
+        $documents = $query->orderBy('created_at', 'desc')->paginate(5);
+        
         return view('iheart.support_leader.list')->with(['documents' => $documents]);        
     }
+
 
     public function selectTeamLeaderDocumentsList(Request $request) 
     {
         $documents = new Document;
         $documents = $documents->selectTeamLeaderDocumentsList($request);
-       
+        
+        
         return view('iheart.team_leader.list')->with(['documents' => $documents]);        
     }
 
@@ -87,15 +120,17 @@ class DocumentController extends Controller
         $document = new Document;
         $document = $document->selectDocumentDetail($document_id);
 
+        $expenditure_historys = json_decode($document->expenditure_historys, true);
+        // dd($expenditure_historys);
         // 권한별 페이지 변경
         if($user->hasRole('employee')) {
-            return view('iheart.employee.detail')->with('document', $document);
+            return view('iheart.employee.detail')->with(['document' => $document, 'expenditure_historys' => $expenditure_historys]);
         } else if ($user->hasRole('team_leader')) {
-            return view('iheart.team_leader.detail')->with('document', $document);
+            return view('iheart.team_leader.detail')->with(['document' => $document, 'expenditure_historys' => $expenditure_historys]);
         } else if ($user->hasRole('support_leader')) {
-            return view('iheart.support_leader.detail')->with('document', $document);
+            return view('iheart.support_leader.detail')->with(['document' => $document, 'expenditure_historys' => $expenditure_historys]);
         } else if ($user->hasRole('admin')) {
-            return view('iheart.admin.detail')->with('document', $document);
+            return view('iheart.admin.detail')->with(['document' => $document, 'expenditure_historys' => $expenditure_historys]);
         } else {
             abort(403);
         }
@@ -164,15 +199,14 @@ class DocumentController extends Controller
      */
     public function insertDocument(Request $request)
     {   
+        // dd(date('Ym'));
         // dd(sizeof($request->expenditure));
         // print_r($request->expenditure);
-        // print_r(array_values($request->expenditure));
+        // dd(json_encode(array_values($request->expenditure)));
         // $temp = array();
         // for ($i=0; $i < sizeof($request->expenditure); $i++) { 
         //     # code...
-
         // }
-
         // print_r(json_encode(array_values($request->expenditure)));
         // die();
         //
@@ -185,29 +219,9 @@ class DocumentController extends Controller
         $document->document_name = $request->document_name;
         $document->document_type = $request->document_type;
         $document->document_comment = $request->document_comment;
+        // array -> json
+        $document->expenditure_historys = json_encode(array_values($request->expenditure));
         $document->save();
-
-        // 2. expenditure_historys table insert - 지출내역 테이블      
-        $history1 = new ExpenditureHistory;        
-        $history1->item = $request->item1;
-        $history1->content = $request->content1;
-        $history1->price = $request->price1;
-        $history1->order = 1;
-        $document->expenditureHistorys()->save($history1); 
-        
-        $history2 = new ExpenditureHistory;        
-        $history2->item = $request->item2;
-        $history2->content = $request->content2;
-        $history2->price = $request->price2;
-        $history2->order = 2;
-        $document->expenditureHistorys()->save($history2); 
-
-        $history3 = new ExpenditureHistory;        
-        $history3->item = $request->item3;
-        $history3->content = $request->content3;
-        $history3->price = $request->price3;
-        $history3->order = 3;
-        $document->expenditureHistorys()->save($history3);      
 
         // 첨부파일 추가
         

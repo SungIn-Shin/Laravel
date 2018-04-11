@@ -38,6 +38,22 @@
                             </div>
                         </div>
 
+                        <!-- otp -->
+                        <div class="form-group{{ $errors->has('otpkey') ? ' has-error' : '' }}">
+                            <label for="otpkey" class="col-md-4 control-label">OTP</label>
+
+                            <div class="col-md-6">
+                                <input id="otpkey" type="text" class="form-control" name="otpkey" value="{{ old('otpkey') }}" required>
+
+                                @if ($errors->has('otpkey'))
+                                    <span class="help-block">
+                                        <strong>{{ $errors->first('otpkey') }}</strong>
+                                    </span>
+                                @endif
+                            </div>
+                        </div>
+                        <!-- otp -->
+
                         <div class="form-group">
                             <div class="col-md-6 col-md-offset-4">
                                 <div class="checkbox">

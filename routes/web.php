@@ -55,6 +55,12 @@ Route::group(['prefix' => 'iheart'], function (){
             Route::post('update',           'UserController@adminUpdateUser')->name('iheart.admin.users.update');
         });
 
+        // 슈퍼관리자 로그 (2018.04.10 KKW)
+        Route::group(['prefix' => 'log'], function () {
+            // 로그인로그 조회
+            Route::get('loginlist',        'LogController@loginList')->name('iheart.admin.log.loginList');
+        });
+
     });
 
     // 일반 사원

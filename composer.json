@@ -9,6 +9,7 @@
         "doctrine/dbal": "^2.6",
         "laravel/framework": "5.4.*",
         "laravel/tinker": "~1.0",
+        "pragmarx/google2fa": "^3.0",
         "unisharp/laravel-ckeditor": "^4.7",
         "zizaco/entrust": "5.2.x-dev",
         "znck/belongs-to-through": "^2.3"

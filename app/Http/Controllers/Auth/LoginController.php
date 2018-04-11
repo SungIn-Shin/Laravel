@@ -9,6 +9,10 @@ use Illuminate\Http\Request; // add kkw
 use Auth; // add kkw
 use Session; // add kkw
 use Carbon\Carbon; // add kkw
+use Facades\PragmaRX\Google2FA\Google2FA; // add kkw
+use Hash; // add kkw
+use App\User; // add kkw
+use App\Loginhistory; // add kkw
 
 class LoginController extends Controller
 {
@@ -23,7 +27,13 @@ class LoginController extends Controller
     |
     */
 
-    use AuthenticatesUsers;
+    // 주석 kkw
+    //use AuthenticatesUsers;
+
+    // 수정 KKW
+    use AuthenticatesUsers {
+        login as traitlogin;
+    }
 
     /**
      * Where to redirect users after login.
@@ -69,6 +79,56 @@ class LoginController extends Controller
         }
        
         return redirect()->intended($this->redirectPath());
+    }
+
+    // 성공실패 이력 (2018.04.06 KKW)
+    // otp 인증 (2018.04.06 KKW)
+    public function login(Request $request)
+    {
+        $loginhistory = new Loginhistory;
+
+        $loginhistory->gubun = "U";
+        $loginhistory->successyn = "Y";
+        
+        // otp 인증
+        $otpkey = $request->otpkey;
+        $window = 4; //default
+        $otpfail = false;
+        $findfail = false;
+        $user = User::where('email', $request->email)->first();
+        if (is_null($user)) {
+            $loginhistory->successyn = "N";
+            $findfail = true;
+        } else {
+            if (is_null($user->otpkey)) {
+                $loginhistory->successyn = "N";
+                $otpfail = true;
+            } else {
+                if (!Google2FA::verifyKey($user->otpkey, $otpkey, $window)) {
+                    $loginhistory->successyn = "N";
+                    $otpfail = true;
+                }
+            }
+        }
+
+        $loginhistory->store($request, $loginhistory);
+
+        if ($findfail) {
+            return redirect('/login')->withErrors(['email' => trans('auth.failed')]);
+        }
+        if ($otpfail) {
+            Session::getHandler()->destroy(Session::getId());
+            return redirect('/login')->withErrors(['otpkey' => trans('auth.failed')]);
+        }
+
+        if (Hash::check($request->password, $user->password)) {
+            // Authentication passed...
+            $loginhistory->successyn = "Y";
+        } else {
+            $loginhistory->successyn = "N";
+        }
+
+        return $this->traitlogin($request);
     }
 
 }

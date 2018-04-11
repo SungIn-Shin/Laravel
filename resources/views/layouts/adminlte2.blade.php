@@ -87,6 +87,9 @@
 
   <!-- bootstrap tree - add by ssi 20180326 -->
   <script src="{{ asset('js/bootstrap-treeview.js') }}"></script>
+
+  <!-- common js (2018.04.09) -->
+  <script type="text/javascript" src="{{ asset('js/common.js?v=20180409') }}"></script>
   
   <script  type="text/javascript">
     $("#multiple").change(function() {
@@ -395,16 +398,16 @@
         <div class="input-group">
           <input type="text" name="q" class="form-control" placeholder="Search...">
           <span class="input-group-btn">
-                <button type="submit" name="search" id="search-btn" class="btn btn-flat"><i class="fa fa-search"></i>
-                </button>
-              </span>
+            <button type="submit" name="search" id="search-btn" class="btn btn-flat"><i class="fa fa-search"></i>
+            </button>
+          </span>
         </div>
       </form>
       <!-- /.search form -->
       <!-- sidebar menu: : style can be found in sidebar.less -->
       <ul class="sidebar-menu" data-widget="tree">
 
-      <li class="active treeview">
+        <li class="active treeview">
           <a href="#">
             <i class="fa fa-dashboard"></i> <span>Dashboard</span>
             <span class="pull-right-container">
@@ -426,53 +429,72 @@
         
 
         <li class="active treeview">
-            <a href="#">
-              <i class="fa fa-laptop"></i>
-              <span>사용자관리</span>
-              <span class="pull-right-container">
-                <i class="fa fa-angle-left pull-right"></i>
-              </span>
-            </a>
-            <ul class="treeview-menu">
-              <li>
-                  <a href="{{ url('/iheart/admin/users/regist')}}">
-                      <i class="fa fa-circle-o"></i> <span>사용자등록</span>                
-                  </a>    
-                  <a href="{{ route('iheart.admin.users.show')}}">
-                    <i class="fa fa-circle-o"></i> <span>사용자조회</span>                
-                </a>    
-              </li>
-            </ul>
-          </li>
-
-          <li class="active treeview">
-              <a href="#">
-                <i class="fa fa-laptop"></i>
-                <span>팀 관리</span>
-                <span class="pull-right-container">
-                  <i class="fa fa-angle-left pull-right"></i>
-                </span>
-              </a>
-              <ul class="treeview-menu">
-                <li>
-                    <a href="{{ route('iheart.admin.teams.show')}}">
-                      <i class="fa fa-circle-o"></i> <span>팀 관리</span>                
-                  </a>    
-                </li>
-              </ul>
+          <a href="#">
+            <i class="fa fa-laptop"></i>
+            <span>사용자관리</span>
+            <span class="pull-right-container">
+              <i class="fa fa-angle-left pull-right"></i>
+            </span>
+          </a>
+          <ul class="treeview-menu">
+            <li>
+              <a href="{{ url('/iheart/admin/users/regist')}}">
+                <i class="fa fa-circle-o"></i> <span>사용자등록</span>                
+              </a>    
+              <a href="{{ route('iheart.admin.users.show')}}">
+                <i class="fa fa-circle-o"></i> <span>사용자조회</span>                
+              </a>    
             </li>
+          </ul>
+        </li>
+
+        <li class="active treeview">
+          <a href="#">
+            <i class="fa fa-laptop"></i>
+            <span>팀 관리</span>
+            <span class="pull-right-container">
+              <i class="fa fa-angle-left pull-right"></i>
+            </span>
+          </a>
+          <ul class="treeview-menu">
+            <li>
+              <a href="{{ route('iheart.admin.teams.show')}}">
+                <i class="fa fa-circle-o"></i> <span>팀 관리</span>                
+              </a>    
+            </li>
+          </ul>
+        </li>
+
+        <!-- 로그 (2018.04.10 KKW) -->
+        <li class="active treeview">
+          <a href="#">
+            <i class="fa fa-laptop"></i>
+            <span>로그</span>
+            <span class="pull-right-container">
+              <i class="fa fa-angle-left pull-right"></i>
+            </span>
+          </a>
+          <ul class="treeview-menu">
+            <li>
+              <a href="{{ route('iheart.admin.log.loginList')}}">
+                <i class="fa fa-circle-o"></i> <span>로그인로그</span>                
+              </a>    
+            </li>
+          </ul>
+        </li>
+        <!-- 로그 -->
 
         @endrole
 
         @role('employee')
         <li>
           <a href="{{ url('/iheart/employee/regist')}}">
-              <i class="fa fa-th"></i> <span>등록페이지-일반사용자</span>                
+            <i class="fa fa-th"></i> <span>등록페이지-일반사용자</span>                
           </a>    
         </li>
         <li>
           <a href="{{ url('/iheart/employee/list')}}">
-              <i class="fa fa-th"></i> <span>조회페이지-일반사용자</span>
+            <i class="fa fa-th"></i> <span>조회페이지-일반사용자</span>
           </a>    
         </li>
         @endrole
@@ -480,12 +502,12 @@
         @role('team_leader')
         <li>
           <a href="{{ url('/iheart/team_leader/regist')}}">
-              <i class="fa fa-th"></i> <span>등록페이지-팀장</span>                
+            <i class="fa fa-th"></i> <span>등록페이지-팀장</span>                
           </a>    
         </li>
         <li>
           <a href="{{ url('/iheart/team_leader/list')}}">
-              <i class="fa fa-th"></i> <span>조회페이지-팀장</span>
+            <i class="fa fa-th"></i> <span>조회페이지-팀장</span>
           </a>
         </li>
         @endrole
@@ -493,12 +515,12 @@
         @role('support_leader')
         <li>
           <a href="{{ url('/iheart/support_leader/regist')}}">
-              <i class="fa fa-th"></i> <span>등록페이지-경영지원팀장</span>                
+            <i class="fa fa-th"></i> <span>등록페이지-경영지원팀장</span>                
           </a>    
         </li>
         <li>
           <a href="{{ url('/iheart/support_leader/list')}}">
-              <i class="fa fa-th"></i> <span>조회페이지-경영지원팀장</span>
+            <i class="fa fa-th"></i> <span>조회페이지-경영지원팀장</span>
           </a>
         </li>
         @endrole

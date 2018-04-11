@@ -38,6 +38,7 @@ class StoreUserPost extends FormRequest
             'team' => 'required', 
             'position' => 'required', 
             'role' => 'required',
+            'otpkey' => 'nullable|min:16|max:16', // 2018.04.09 KKW
         ];
     }
 }

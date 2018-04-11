@@ -128,6 +128,24 @@
                                     @endif
                                 </div>
 
+                                <!-- otp key (2018.04.09) -->
+                                <div class="form-group{{ $errors->has('otpkey') ? ' has-error' : '' }}">
+                                    <label for="name">OTP KEY</label>
+                                    <input type="text" class="form-control" id="otpkey" name="otpkey" value="{{ old('otpkey') }}" onclick="javascript:alert('OTP생성버튼을 클릭하세요.');">
+                                    <input type="button" value="OTP생성" onclick="javascript:genOtpSecretString();">
+                                    <input type="button" value="클립보드복사" onclick="javascript:copyOtpSecretString();">
+                                    <br>현재 표시된 OTP 코드로 QR이미지 보기<input type="checkbox" name="chkOtpQr" id="chkOtpQr" onclick="javascript:dispOtpQr();">
+                                    <br>
+                                    <img id="qrImg" src="" />
+
+                                    @if ($errors->has('otpkey'))
+                                    <span class="help-block">
+                                        <strong>{{ $errors->first('otpkey') }}</strong>
+                                    </span>
+                                    @endif
+                                </div>
+                                <!-- otp key -->
+
                                 <div class="form-group">
                                     <button type="submit" class="btn btn-default pull-right">제출</button> 
                                 </div>

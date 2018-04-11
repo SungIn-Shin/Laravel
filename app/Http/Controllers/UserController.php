@@ -55,6 +55,7 @@ class UserController extends Controller
         $user->name = $request->name;
         $user->email = $request->email;
         $user->password = bcrypt($request->password);
+        $user->otpkey = $request->otpkey; // 2018.04.09 KKW
         
         $user->save();
 
@@ -116,6 +117,7 @@ class UserController extends Controller
                 'team'      => 'required', 
                 'position'  => 'required', 
                 'role'      => 'required',
+                'otpkey'    => 'nullable|min:16|max:16', // 2018.04.09 KKW
             ];
         } else {
             // 패스워드 미입력시 패스워드는 validation 제외
@@ -125,6 +127,7 @@ class UserController extends Controller
                 'team'      => 'required', 
                 'position'  => 'required',
                 'role'      => 'required',
+                'otpkey'    => 'nullable|min:16|max:16', // 2018.04.09 KKW
             ];
         }
 
@@ -144,6 +147,7 @@ class UserController extends Controller
                 $user->job_id = $request->job;
                 $user->job_name = Job::where('id', $request->job)->first()->name;
             }
+            $user->otpkey = $request->otpkey; // 2018.04.09 KKW
 
             // 사용자의 기존 권한 제거 후 다시 권한 부여.
             // users(n) : roles(m) 구조이기에 1개의 권한만 주기위한 작업.

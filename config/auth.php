@@ -101,7 +101,6 @@ return [
     ],
 
     /* 2018.03.30 kkw */
-    //'password_expires_days' => 90,
-    'password_expires_days' => 1,
+    'password_expires_days' => 90,
 
 ];

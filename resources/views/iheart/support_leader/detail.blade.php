@@ -1,50 +1,4 @@
 @extends('layouts.adminlte2')
-
-<link rel="stylesheet" href="{{ asset('css/jquery-plugin/eazyzoom/css/example.css') }}" />
-<link rel="stylesheet" href="{{ asset('css/jquery-plugin/eazyzoom/css/pygments.css') }}" />
-<link rel="stylesheet" href="{{ asset('css/jquery-plugin/eazyzoom/css/easyzoom.css') }}" />
-
-<!-- Google Analytics tracking code -->
-<script>
-    var _gaq=[['_setAccount','UA-2508361-9'],['_trackPageview']];
-    (function(d,t){var g=d.createElement(t),s=d.getElementsByTagName(t)[0];
-    g.src=('https:'==location.protocol?'//ssl':'//www')+'.google-analytics.com/ga.js';
-    s.parentNode.insertBefore(g,s)}(document,'script'));
-</script>
-
-<script src="https://code.jquery.com/jquery-3.1.1.min.js"></script>
-<script src="{{ asset('css/jquery-plugin/eazyzoom/dist/easyzoom.js') }}"></script>
-<script>
-    // Instantiate EasyZoom instances
-    var $easyzoom = $('.easyzoom').easyZoom();
-
-    // Setup thumbnails example
-    var api1 = $easyzoom.filter('.easyzoom--with-thumbnails').data('easyZoom');
-
-    $('.thumbnails').on('click', 'a', function(e) {
-        var $this = $(this);
-
-        e.preventDefault();
-
-        // Use EasyZoom's `swap` method
-        api1.swap($this.data('standard'), $this.attr('href'));
-    });
-
-    {{--  // Setup toggles example
-    var api2 = $easyzoom.filter('.easyzoom--with-toggle').data('easyZoom');
-
-    $('.toggle').on('click', function() {
-        var $this = $(this);
-        if ($this.data("active") === true) {
-            $this.text("Switch on").data("active", false);
-            api2.teardown();
-        } else {
-            $this.text("Switch off").data("active", true);
-            api2._init();
-        }
-    });  --}}
-</script>
-
 @section('content')
 <!-- Content Wrapper. Contains page content -->
 <div class="content-wrapper">
@@ -115,22 +69,23 @@
                                 </tr>
                             </thead>
                             <tbody>
-                                @foreach($document->expenditureHistorys as $expens)
+                                @foreach($expenditure_historys as $expens)
+                                @if(!empty($expens['item']) && !empty($expens['price']))
                                 <tr>
-                                    <td>
-                                        <input type="text" class="form-control" id="item1" name="item1" placeholder="항목1" value="{{ $expens->item }}">
+                                    <td class="text-center">
+                                        <input type="text" class="form-control" id="item1" name="item1" placeholder="항목1" value="{{ $expens['item']}}">
                                     </td>
-                                    <td>
-                                        <input type="text" class="form-control" id="content1" name="content1" placeholder="내용1" value="{{ $expens->content }}">
+                                    <td class="text-center">
+                                        <input type="text" class="form-control" id="content1" name="content1" placeholder="내용1" value="{{ $expens['content']}}">
                                     </td>
-                                    <td>
-                                        <input type="number" class="form-control" id="price1" name="price1" placeholder="금액1" value="{{ $expens->price }}">
+                                    <td class="text-center">
+                                        <input type="number" class="form-control" id="price1" name="price1" placeholder="금액1" value="{{ $expens['price'] }}">
                                     </td>
                                 </tr>
-                                @endforeach                                   
+                                @endif
+                                @endforeach                                
                             </tbody>
                             </table>
-                            <label for="" class="pull-right">합계 : {{$document->expenditureHistorys[0]->price + $document->expenditureHistorys[1]->price + $document->expenditureHistorys[2]->price}} 원</label>
                         </div>
                         <!-- 증빙서류 -->
                         <div class="form-group col-lg-6 col-md-12">
@@ -150,34 +105,43 @@
                             </ul>
                             @endif
 
-                            @if($document->sl_inspection_status === "APR")
-                            승인됨
-                            @elseif($document->sl_inspection_status === "REJ" || $document->tl_inspection_status === "REJ")                         
-                                @foreach($document->comments as $comment)
-                                <tr class="collapse" id="collapseExample">
-                                    <label for="rej_data">반려내역</label>
-                                    <table class="table" id="rej_data">
-                                        <thead class="bg-danger">
-                                            <tr>
-                                                <th>작성자</th>
-                                                <th>제목</th>
-                                                <th>내용</th>
-                                                <th>작성자</th>
-                                                <th>작성일시</th>                                    
-                                            </tr>  
-                                        </thead>
-                                        <tbody class="bg-warning">
-                                            <tr>
-                                                <td>{{$comment->writer}}</td>
-                                                <td>{{$comment->title}}</td>
-                                                <td>{{$comment->content}}</td>
-                                                <td>{{$comment->writer}}</td>
-                                                <td>{{$comment->created_at}}</td>
-                                            </tr>
-                                        </tbody>
-                                    </table>
-                                </tr>
-                                @endforeach
+                            @if($document->tl_inspection_status === "APR" && $document->sl_inspection_status === "APR")
+                            <div class="alert alert-success">
+                                최종 승인
+                            </div>
+                            @elseif($document->tl_inspection_status != "APR" && $document->tl_inspection_status != "REJ" && $document->sl_inspection_status != "REJ")
+                            <div class="alert alert-warning">
+                                팀장 승인 대기
+                            </div>
+                            @elseif($document->sl_inspection_status === "REJ" || $document->tl_inspection_status === "REJ")
+                            <div class="alert alert-danger">
+                                반려
+                            </div>
+                            @foreach($document->comments as $comment)
+                            <tr class="collapse" id="collapseExample">
+                                <label for="rej_data">반려내역</label>
+                                <table class="table" id="rej_data">
+                                    <thead class="bg-danger">
+                                        <tr>
+                                            <th>작성자</th>
+                                            <th>제목</th>
+                                            <th>내용</th>
+                                            <th>작성자</th>
+                                            <th>작성일시</th>                                    
+                                        </tr>  
+                                    </thead>
+                                    <tbody class="bg-warning">
+                                        <tr>
+                                            <td>{{$comment->writer}}</td>
+                                            <td>{{$comment->title}}</td>
+                                            <td>{{$comment->content}}</td>
+                                            <td>{{$comment->writer}}</td>
+                                            <td>{{$comment->created_at}}</td>
+                                        </tr>
+                                    </tbody>
+                                </table>
+                            </tr>
+                            @endforeach
                             @else
                             <button type="button" class="btn btn-danger pull-right" data-toggle="modal" data-target="#rejFormModal" >반려</button>
                             <form action="{{ route('iheart.support_leader.apr') }}" method="post" id="aprForm">  
@@ -200,11 +164,7 @@
                         </div>
                         @endforeach
                         @else 
-                        <div class="col-xs-6 col-md-3">
-                            <a href="" class="thumbnail">
-                                <input class="img-thumbnail" type="image" src="">
-                            </a>
-                        </div>
+                        
                         @endif
                     </div>
             </div>

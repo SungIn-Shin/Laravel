@@ -21,12 +21,6 @@ Auth::routes();
 
 
 Route::group(['prefix' => 'iheart'], function (){
-
-    // Route::get('dashboard', function(){
-    //     return view('iheart.dashboard');
-    // })->name('iheart.dashboard'); kkw ssi 11:31
-
-
     // 슈퍼 관리자
     Route::group(['prefix' => 'admin', 'middleware' => ['role:admin']], function () {
         // 슈퍼관리자 팀 관리
@@ -40,7 +34,6 @@ Route::group(['prefix' => 'iheart'], function (){
             // 팀 정렬 수정
             Route::post('update/sort',      'TeamController@updateSort')->name('iheart.admin.teams.update.sort');
         });
-
         // 슈퍼관리자 사용자 관리
         Route::group(['prefix' => 'users'], function () {
             // 자용자 등록 폼
@@ -85,9 +78,7 @@ Route::group(['prefix' => 'iheart'], function (){
 
     // 경영지원 팀장
     Route::group(['prefix' => 'support_leader', 'middleware' => ['role:support_leader']], function() {
-        Route::get('regist', function() {
-            return view('iheart.support_leader.regist');
-        })->name('ihart.support_leader.regist');
+        Route::get('regist',                'DocumentController@registForm')->name('ihart.support_leader.regist');
     
         Route::post('regist',               'DocumentController@insertDocument')->name('iheart.support_leader.regist');
     
@@ -99,7 +90,16 @@ Route::group(['prefix' => 'iheart'], function (){
         // 승인 처리
         Route::post('apr',                  'DocumentController@supportLeaderApr')->name('iheart.support_leader.apr');
     });
+
+    // 조직도
+    Route::group(['prefix' => 'organizationchart'], function() {
+        Route::get('show', 'OrganizationController@showOrganizations')->name('iheart.organization.show');
+    });
 });
+
+
+// Mail Test
+Route::get('send', 'MailController@send')->name('iheart.mail.send');
 
 
 

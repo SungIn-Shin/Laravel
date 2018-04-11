@@ -4,7 +4,7 @@ use Illuminate\Support\Facades\Schema;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Database\Migrations\Migration;
 
-class AddPositionJobColumnToUsersTable extends Migration
+class AddColumnDocumentsTableExpenditureHistorys extends Migration
 {
     /**
      * Run the migrations.
@@ -14,6 +14,9 @@ class AddPositionJobColumnToUsersTable extends Migration
     public function up()
     {
         //
+        Schema::table('documents', function (Blueprint $table) {
+            $table->json('expenditure_historys');
+        });
     }
 
     /**
@@ -24,5 +27,8 @@ class AddPositionJobColumnToUsersTable extends Migration
     public function down()
     {
         //
+        Schema::table('documents', function (Blueprint $table) {
+            $table->dropColumn('expenditure_historys');
+        });
     }
 }

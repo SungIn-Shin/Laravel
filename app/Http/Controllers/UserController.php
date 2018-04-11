@@ -5,7 +5,7 @@ use Debugbar;
 use Redirect;
 use App\User;
 use App\Position;
-use App\Job;
+use App\Rank;
 use App\Team;
 use App\Role;
 use Validator;
@@ -21,13 +21,13 @@ class UserController extends Controller
     // 사용자 등록 폼
     public function userRegistForm() 
     {
+        $ranks = Rank::orderBy('sortkey', 'asc')->get();
         $positions = Position::orderBy('sortkey', 'asc')->get();
-        $jobs = Job::orderBy('sortkey', 'asc')->get();
         $roles = Role::orderBy('id', 'asc')->get();
         $teams = Team::all();
 
         return view('iheart.admin.user.regist')->with([ 'positions' => $positions, 
-                                                        'jobs'      => $jobs, 
+                                                        'ranks'     => $ranks, 
                                                         'roles'     => $roles, 
                                                         'teams'     => $teams
                                                     ]);
@@ -41,15 +41,16 @@ class UserController extends Controller
 
         $user->team_id = $request->team;
 
-        $user->position_id = $request->position;
+        $user->rank_id = $request->rank;
         
-        $position = Position::where('id', $request->position)->first();
-        $user->position_name = $position->name;
+        $rank = Rank::where('id', $request->position)->first();
+        $user->rank_name = $rank->name;
 
-        if($request->has('job')) {
-            $user->job_id = $request->job;
-            $job = Job::where('id', $request->job)->first();
-            $user->job_name = $job->name;
+        // if($request->has('job')) {
+        if($request->has('position')) {
+            $user->position_id = $request->position;
+            $position = Position::where('id', $request->position)->first();
+            $user->position_name = $position->name;
         }
         
         $user->name = $request->name;
@@ -76,27 +77,17 @@ class UserController extends Controller
     {
         $user = User::where('id', $user_id)->first();
 
+        $ranks = Rank::orderBy('sortkey', 'asc')->get();
         $positions = Position::orderBy('sortkey', 'asc')->get();
-        $jobs = Job::orderBy('sortkey', 'asc')->get();
         $roles = Role::orderBy('id', 'asc')->get();
         $teams = Team::all();
         return view('iheart.admin.user.detail')->with([ "user" => $user, 
                                                         'positions' => $positions, 
-                                                        'jobs' => $jobs, 
+                                                        'ranks' => $ranks, 
                                                         'roles' => $roles,
-                                                        'teams' => $teams]
-                                                    );
+                                                        'teams' => $teams
+                                                    ]);
     }
-
-    protected $updateUserRules = 
-    [
-        'email' => 'required', 
-        'name'  => 'required|string|max:255',
-        'current_password' => 'required',
-        'password' => 'required|confirmed|min:8|max:30'/*|regex:/^.*(?=^.{8,30}$)(?=.*\d)(?=.*[a-zA-Z])(?=.*[!@#$%^&*+=]).*$/'*/, 
-        'team' => 'required', 
-        'position' => 'required'
-    ];
 
     // 사용자 정보 수정
     public function adminUpdateUser(Request $request) 
@@ -114,7 +105,7 @@ class UserController extends Controller
                 'name'      => 'required|string|max:255',
                 'password'  => 'required|confirmed|min:8|max:30'/*|regex:/^.*(?=^.{8,30}$)(?=.*\d)(?=.*[a-zA-Z])(?=.*[!@#$%^&*+=]).*$/'*/, 
                 'team'      => 'required', 
-                'position'  => 'required', 
+                'rank'      => 'required', 
                 'role'      => 'required',
             ];
         } else {
@@ -123,7 +114,7 @@ class UserController extends Controller
                 'email'     => 'required', 
                 'name'      => 'required|string|max:255',
                 'team'      => 'required', 
-                'position'  => 'required',
+                'rank'      => 'required',
                 'role'      => 'required',
             ];
         }
@@ -138,11 +129,11 @@ class UserController extends Controller
             }
             $user->team_id = $request->team;
 
-            $user->position_id = $request->position;
-            $user->position_name = Position::where('id', $request->position)->first()->name;
-            if($request->has('job')) {
-                $user->job_id = $request->job;
-                $user->job_name = Job::where('id', $request->job)->first()->name;
+            $user->rank_id = $request->rank;
+            $user->rank_name = Rank::where('id', $request->rank)->first()->name;
+            if($request->has('position')) {
+                $user->position_id = $request->position;
+                $user->position_name = Position::where('id', $request->position)->first()->name;
             }
 
             // 사용자의 기존 권한 제거 후 다시 권한 부여.
@@ -165,7 +156,7 @@ class UserController extends Controller
     // 사용자 정렬 수정
     public function adminUpdateUserSort(Request $request)
     {
-
+        
     }
 
  

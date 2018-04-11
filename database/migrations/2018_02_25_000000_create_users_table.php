@@ -17,10 +17,10 @@ class CreateUsersTable extends Migration
         {
             $table->increments('id');
             $table->integer('team_id')->unsigned();
-            $table->integer('position_id')->unsigned();
-            $table->string('position_name');
-            $table->integer('job_id')->unsigned()->nullable();
-            $table->string('job_name')->nullable();
+            $table->integer('rank_id')->unsigned();
+            $table->string('rank_name');
+            $table->integer('position_id')->unsigned()->nullable();
+            $table->string('position_name')->nullable();
             $table->string('name');
             $table->string('email')->unique();
             $table->string('password');
@@ -28,8 +28,8 @@ class CreateUsersTable extends Migration
             $table->timestamps();
             $table->softDeletes();
 
+            $table->foreign('rank_id')->references('id')->on('ranks');
             $table->foreign('position_id')->references('id')->on('positions');
-            $table->foreign('job_id')->references('id')->on('jobs');
             $table->foreign('team_id')->references('id')->on('teams');
         });
     }

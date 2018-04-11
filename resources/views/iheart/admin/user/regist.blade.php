@@ -81,30 +81,30 @@
                                     @endif
                                 </div>
 
-                                <div class="form-group{{ $errors->has('position') ? ' has-error' : '' }}">
-                                    <label for="position">직급</label>
-                                    <select id="position" name="position" class="form-control">
+                                <div class="form-group{{ $errors->has('rank') ? ' has-error' : '' }}">
+                                    <label for="rank">직급</label>
+                                    <select id="rank" name="rank" class="form-control">
                                         <option value="">직급 선택</option>
-                                        @foreach ($positions as $position)
-                                            <option value="{{$position->id}}" {{ old('position') == $position->id ? 'selected' : '' }}>
-                                                {{$position->name}}
+                                        @foreach ($ranks as $rank)
+                                            <option value="{{$rank->id}}" {{ old('rank') == $rank->id ? 'selected' : '' }}>
+                                                {{$rank->name}}
                                             </option>
                                         @endforeach
                                     </select>
-                                    @if ($errors->has('position'))
+                                    @if ($errors->has('rank'))
                                     <span class="help-block">
-                                        <strong>{{ $errors->first('position') }}</strong>
+                                        <strong>{{ $errors->first('rank') }}</strong>
                                     </span>
                                     @endif
                                 </div>
 
                                 <div class="form-group">
-                                    <label for="job">직책</label>
-                                    <select id="job" name="job" class="form-control">
+                                    <label for="position">직책</label>
+                                    <select id="position" name="position" class="form-control">
                                         <option value="">직책 선택</option>
-                                        @foreach ($jobs as $job)
-                                            <option value="{{$job->id}}" {{ old('job') == $job->id ? 'selected' : '' }}>
-                                                {{$job->name}}
+                                        @foreach ($positions as $position)
+                                            <option value="{{$position->id}}" {{ old('position') == $position->id ? 'selected' : '' }}>
+                                                {{$jpositionob->name}}
                                             </option>
                                         @endforeach
                                     </select>

@@ -110,7 +110,6 @@
                                 </span>
                                 @endif
                             </div>
-
                             
 
                             <div class="form-group col-lg-12 col-md-12">
@@ -131,7 +130,7 @@
             <div class="box box-primary">  
                 <div class="box-header with-border">
                     <h3 class="box-title">
-                        팀 정렬
+                        팀
                     </h3>
                 </div>                 
                 <div class="box-body">
@@ -170,7 +169,7 @@
                         </div>       
                 </div>
             </div>          
-        </div>                    
+        </div>    
     </div>
 </section>
 <!-- /.content -->

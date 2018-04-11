@@ -25,7 +25,7 @@
                     <div class="box-body">
                         <div class="row">
                             
-                            <div class="col-lg-3">
+                            <div class="col-lg-3 col-md-12">
                                 <select id="year" name="year" class="form-control">
                                     <option value="2018">연도 선택</option>
                                     <option value="2018">2018년</option>
@@ -39,7 +39,7 @@
                                     <option value="2010">2010년</option>
                                 </select>
                             </div>
-                            <div class="col-lg-3">
+                            <div class="col-lg-3 col-md-12">
                                 <select id="month" name="month" class="form-control">
                                     <option value="">월 선택</option>
                                     <option value="1">1월</option>
@@ -57,7 +57,7 @@
                                 </select>
                             </div>
 
-                            <div class="col-lg-3">
+                            <div class="col-lg-3 col-md-12">
                                 <select id="team_id" name="team_id" class="form-control">
                                     <option value="">팀선택</option>
                                     <option value="2">경영지원팀</option>
@@ -68,9 +68,8 @@
                                 </select>
                             </div>
 
-                            <div class="col-lg-3">
-                                <label for="user_name">작성자</label>
-                                <input type="text" id="user_name" name="user_name" class="form-group">
+                            <div class="col-lg-3 col-md-12">
+                                <input type="text" id="user_name" name="user_name" class="form-control" placeholder="작성자">
                                 <button type="submit" class="btn btn-default pull-right" id="aprBtn">검색</button> 
                             </div>
                         </div>
@@ -88,41 +87,37 @@
                         <table class="table">
                             <thead>
                                 <tr>
-                                    <th>팀</th>
-                                    <th>작성자</th>
-                                    <th>문서명</th>
-                                    <th>문서분류</th>
-                                    <th>등록일시</th>
-                                    <th>팀장 승인</th>
-                                    <th>지원팀장 승인</th>
-                                    <th>최종승인</th>
-                                    <th>반려사유</th>
+                                    <th class="text-center">팀</th>
+                                    <th class="text-center">작성자</th>
+                                    <th class="text-center">문서명</th>
+                                    <th class="text-center">문서분류</th>
+                                    <th class="text-center">등록일시</th>
+                                    <th class="text-center">팀장 승인</th>
+                                    <th class="text-center">지원팀장 승인</th>
+                                    <th class="text-center">반려사유</th>
                                 </tr>                                    
                             </thead>
                             <tbody>
                                 @foreach($documents as $document)
-                                @if($document->tl_inspection_status == "APR" && ($document->sl_inspection_status == "APR" || $document->sl_inspection_status == null))
+                                @if($document->sl_inspection_status == "APR")
                                 <tr class="success">
                                 @elseif($document->tl_inspection_status == "REJ" || $document->sl_inspection_status == "REJ")
                                 <tr class="danger">
                                 @else  
                                 <tr class="warning">
                                 @endif
-                                    <td>{{$document->team->name}}</td>
-                                    <td>{{$document->user->name}}</td>
-                                    <td><a href="{{ route('iheart.support_leader.detail', $document->id) }}">  {{ $document->document_name }} </a></td> 
-                                    <td>{{ $document->document_type }}</td>
-                                    <td>{{ $document->created_at }}</td>
-                                    <td>
+                                    <td class="text-center">{{$document->team->name}}</td>
+                                    <td class="text-center">{{$document->user->name}}</td>
+                                    <td class="text-center"><a href="{{ route('iheart.support_leader.detail', $document->id) }}">  {{ $document->document_name }} </a></td> 
+                                    <td class="text-center">{{ $document->document_type }}</td>
+                                    <td class="text-center">{{ $document->created_at }}</td>
+                                    <td class="text-center">
                                         {{ $document->changeInspectionStatus($document->tl_inspection_status)}}
                                     </td>
-                                    <td>
+                                    <td class="text-center">
                                         {{$document->changeInspectionStatus($document->sl_inspection_status)}}
                                     </td>
-                                    <td>
-                                        {{$document->changeStatus($document->status)}}
-                                    </td>
-                                    <td>
+                                    <td class="text-center">
                                         @if($document->tl_inspection_status == "REJ" || $document->sl_inspection_status == "REJ" )
                                             <a data-toggle="collapse" href="#{{$document->id}}" aria-expanded="true" aria-controls="{{$document->id}}">
                                                 보기

@@ -9,10 +9,6 @@ use Illuminate\Http\Request;
 class Document extends Model
 {
     use \Znck\Eloquent\Traits\BelongsToThrough;
-    // Documents(1) : Expenditure_historys(N) 관계 지정
-    public function expenditureHistorys() {
-        return $this->hasMany('App\ExpenditureHistory');
-    }
     
     // Documents(1) : attachments(N) 관계 지정
     public function attachments() {

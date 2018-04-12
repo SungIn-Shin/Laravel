@@ -47,8 +47,8 @@
                         <div class="row">
                             
                             <div class="col-lg-4">
-                                <input id="created_at_start" name="created_at_start" type="date" value="{{ request()->created_at_start }}">~
-                                <input id="created_at_end" name="created_at_end" type="date" value="{{ request()->created_at_end }}">
+                                <input id="created_at_start" name="created_at_start" data-provide="datepicker" data-date-format="yyyy-mm-dd" value="{{ request()->created_at_start }}">~
+                                <input id="created_at_end" name="created_at_end" data-provide="datepicker" data-date-format="yyyy-mm-dd" value="{{ request()->created_at_end }}">
                             </div>
                             <div class="col-lg-3">
                                 <label for="user_name">성공실패</label>

@@ -46,7 +46,12 @@
                                     <td>{{ $user->position_name}}</td>
                                     <td>{{ $user->email}}</td>
                                     <td>{{ $user->created_at}}</td>
-                                    @if (empty($user->deleted_at))
+                                    {{-- @if (empty($user->deleted_at))
+                                        <td>사용중</td>
+                                    @else
+                                        <td>미사용</td>
+                                    @endif --}}
+                                    @if ($user->useyn == 'Y')
                                         <td>사용중</td>
                                     @else
                                         <td>미사용</td>

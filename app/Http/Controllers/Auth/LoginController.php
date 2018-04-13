@@ -90,7 +90,7 @@ class LoginController extends Controller
         $loginhistory->gubun = "U";
         $loginhistory->successyn = "Y";
         
-        // otp 인증
+        // 계정 찾기 와 otp 인증 확인
         $otpkey = $request->otpkey;
         $window = 4; //default
         $otpfail = false;
@@ -111,10 +111,22 @@ class LoginController extends Controller
             }
         }
 
+        // 사용여부 확인 (2018.04.13 KKW)
+        $useflagfail = false;
+        if (!$findfail) {
+            if ($user->useyn == 'N') {
+                $loginhistory->successyn = "N";
+                $useflagfail = true;
+            }
+        }
+
         $loginhistory->store($request, $loginhistory);
 
         if ($findfail) {
             return redirect('/login')->withErrors(['email' => trans('auth.failed')]);
+        }
+        if ($useflagfail) { // (2018.04.13 KKW)
+            return redirect('/login')->withErrors(['email' => '사용이 불가능한 계정입니다.']);
         }
         if ($otpfail) {
             Session::getHandler()->destroy(Session::getId());

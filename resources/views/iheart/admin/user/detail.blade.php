@@ -144,6 +144,16 @@
                                     </select>
                                 </div>
 
+                                <!-- 사용여부 (2018.04.12 KKW) -->
+                                <div class="form-group">
+                                    <label for="useyn">사용여부</label>
+                                    <select id="useyn" name="useyn" class="form-control">
+                                        <option value="Y" {{ $user->useyn == 'Y' ? 'selected' : '' }}>사용중</option>
+                                        <option value="N" {{ $user->useyn == 'N' ? 'selected' : '' }}>미사용</option>
+                                    </select>
+                                </div>
+                                <!-- 사용여부 -->
+
                                 <!-- otp key (2018.04.09) -->
                                 <div class="form-group{{ $errors->has('otpkey') ? ' has-error' : '' }}">
                                     <label for="name">OTP KEY</label>

@@ -109,6 +109,7 @@ class UserController extends Controller
                 'rank'      => 'required', 
                 'role'      => 'required',
                 'otpkey'    => 'nullable|min:16|max:16', // 2018.04.09 KKW
+                'useyn'     => 'required|string|min:1|max:1', // 2018.04.13 KKW
             ];
         } else {
             // 패스워드 미입력시 패스워드는 validation 제외
@@ -119,6 +120,7 @@ class UserController extends Controller
                 'rank'      => 'required',
                 'role'      => 'required',
                 'otpkey'    => 'nullable|min:16|max:16', // 2018.04.09 KKW
+                'useyn'     => 'required|string|min:1|max:1', // 2018.04.13 KKW
             ];
         }
 
@@ -139,6 +141,7 @@ class UserController extends Controller
                 $user->position_name = Position::where('id', $request->position)->first()->name;
             }
             $user->otpkey = $request->otpkey; // 2018.04.09 KKW
+            $user->useyn = $request->useyn; // 2018.04.13 KKW
 
             // 사용자의 기존 권한 제거 후 다시 권한 부여.
             // users(n) : roles(m) 구조이기에 1개의 권한만 주기위한 작업.

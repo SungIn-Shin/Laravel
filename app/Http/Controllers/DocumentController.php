@@ -41,7 +41,7 @@ class DocumentController extends Controller
         } else if ($user->hasRole('team_leader')) {
             return view('iheart.team_leader.regist')->with(['document_name' => $document_name, 'items' => $items]);
         } else if ($user->hasRole('support_leader')) {
-            return view('iheart.support_leader.regist')->with(['document_name' => $document_name, 'items' => $items]);
+            return view('iheart.support_leader.document.regist')->with(['document_name' => $document_name, 'items' => $items]);
         } else {
             abort(400);
         }
@@ -52,9 +52,9 @@ class DocumentController extends Controller
      */
     public function selectNomalUserDocumentsList(Request $request)
     {
-        // dd(ApprovalLine::all()); 
+        $user_id = Auth::user()->id;
         $documents = new Document;
-        $documents = $documents->selectNomalUserDocumentsList($request);
+        $documents = Document::where('user_id', $user_id)->orderBy('created_at', 'desc')->paginate(5);
         return view('iheart.employee.list')->with(['documents' => $documents]);
     }
 
@@ -99,15 +99,15 @@ class DocumentController extends Controller
 
         $documents = $query->orderBy('created_at', 'desc')->paginate(5);
         
-        return view('iheart.support_leader.list')->with(['documents' => $documents]);        
+        return view('iheart.support_leader.document.list')->with(['documents' => $documents]);        
     }
 
 
     public function selectTeamLeaderDocumentsList(Request $request) 
     {
+        $team_id = Auth::user()->team_id;
         $documents = new Document;
-        $documents = $documents->selectTeamLeaderDocumentsList($request);
-        
+        $documents = Document::where('team_id', $team_id)->orderBy('created_at', 'desc')->paginate(5);
         
         return view('iheart.team_leader.list')->with(['documents' => $documents]);        
     }
@@ -118,7 +118,8 @@ class DocumentController extends Controller
         $user = Auth::user();
         // 모델에서 데이터 획득
         $document = new Document;
-        $document = $document->selectDocumentDetail($document_id);
+
+        $document = Document::find($document_id);
 
         $expenditure_historys = json_decode($document->expenditure_historys, true);
         // dd($expenditure_historys);
@@ -128,7 +129,7 @@ class DocumentController extends Controller
         } else if ($user->hasRole('team_leader')) {
             return view('iheart.team_leader.detail')->with(['document' => $document, 'expenditure_historys' => $expenditure_historys]);
         } else if ($user->hasRole('support_leader')) {
-            return view('iheart.support_leader.detail')->with(['document' => $document, 'expenditure_historys' => $expenditure_historys]);
+            return view('iheart.support_leader.document.detail')->with(['document' => $document, 'expenditure_historys' => $expenditure_historys]);
         } else if ($user->hasRole('admin')) {
             return view('iheart.admin.detail')->with(['document' => $document, 'expenditure_historys' => $expenditure_historys]);
         } else {
@@ -178,7 +179,7 @@ class DocumentController extends Controller
         $comment->content   = $request->content;
         $document->comments()->save($comment);
 
-        return redirect()->route('iheart.support_leader.list');        
+        return redirect()->route('iheart.support_leader.documents.list');        
     }
     // 경영지원 팀장 승인처리 
     public function supportLeaderApr(Request $request) 
@@ -188,7 +189,7 @@ class DocumentController extends Controller
         $document->sl_inspection_status = "APR";
         $document->save();
         
-        return redirect()->route('iheart.support_leader.list');        
+        return redirect()->route('iheart.support_leader.documents.list');        
     }
 
     /**
@@ -199,18 +200,7 @@ class DocumentController extends Controller
      */
     public function insertDocument(Request $request)
     {   
-        // dd(date('Ym'));
-        // dd(sizeof($request->expenditure));
-        // print_r($request->expenditure);
-        // dd(json_encode(array_values($request->expenditure)));
-        // $temp = array();
-        // for ($i=0; $i < sizeof($request->expenditure); $i++) { 
-        //     # code...
-        // }
-        // print_r(json_encode(array_values($request->expenditure)));
-        // die();
-        //
-        // 1. 사용자 아이디 획득
+        // 1. 사용자 계정 획득
         $user = Auth::user();
         // 2. Document 테이블 Insert
         $document = new Document;
@@ -219,8 +209,23 @@ class DocumentController extends Controller
         $document->document_name = $request->document_name;
         $document->document_type = $request->document_type;
         $document->document_comment = $request->document_comment;
-        // array -> json
-        $document->expenditure_historys = json_encode(array_values($request->expenditure));
+        $expenditureArr = array();
+        // 기존 -> [{"item":"811","content":null,"price":"1234"}]
+        // 변경 후 -> [{"item":"811","item_name":"복리후생비","content":null,"price":"1234"}]
+        foreach($request->expenditure as $expenditure) {
+            if(!empty($expenditure['item'])) {
+                $dataArr = array();
+                $exItem = ExpenditureItem::where('code', $expenditure['item'])->first();;
+                $dataArr['item'] = $expenditure['item'];
+                $dataArr['item_name'] = $exItem->name;
+                $dataArr['content'] = $expenditure['content'];
+                $dataArr['price'] = $expenditure['price'];
+                array_push($expenditureArr, $dataArr);
+            }
+        }
+        $document->expenditure_historys = json_encode($expenditureArr);
+        // print_r($document->expenditure_historys);
+        // die();
         $document->save();
 
         // 첨부파일 추가
@@ -243,5 +248,35 @@ class DocumentController extends Controller
         } elseif($user->hasRole('team_leader')) {
             return redirect()->route('iheart.team_leader.list');        
         }        
+    }
+
+    public function accountingList(Request $request) 
+    {
+        $query = Document::query();
+        
+        if($request->has('team_id')) { 
+            $team_id = $request->team_id;
+            $query->where('team_id', $team_id);
+        }
+
+        if($request->has('user_name')){
+            $user_name = $request->user_name;
+            $users = User::where('name', 'like', '%'.$user_name.'%')->pluck('id'); // id만 array로 반환해줌.
+            $query->whereIn('user_id', $users);
+        }
+
+        if($request->has('year')) {
+            $year = $request->year;
+            $query->whereYear('created_at', $year);
+        }
+
+        if($request->has('month')) {
+            $month = $request->month;
+            $query->whereMonth('created_at', $month);
+        }
+
+        $documents = $query->orderBy('created_at', 'desc');
+        
+        return view('iheart.support_leader.document.accountinglist')->with(['documents' => $documents]);
     }
 }

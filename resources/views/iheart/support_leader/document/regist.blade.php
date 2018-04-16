@@ -21,7 +21,7 @@
 
 <!-- Main content -->
 <section class="content">
-    <form action="{{ route('iheart.support_leader.regist') }}" method="post" enctype="multipart/form-data">
+    <form action="{{ route('iheart.support_leader.documents.regist') }}" method="post" enctype="multipart/form-data">
         {{ csrf_field() }}
         <div class="row">
             <div class="col-lg-12">

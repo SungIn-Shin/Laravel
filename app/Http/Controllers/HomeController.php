@@ -37,7 +37,7 @@ class HomeController extends Controller
             return redirect()->route('iheart.employee.list');
         }
         else if ($user->hasRole('support_leader')) {
-            return redirect()->route('iheart.support_leader.list');
+            return redirect()->route('iheart.support_leader.documents.list');
         }
         else {
             return view('home');

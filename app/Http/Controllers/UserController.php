@@ -43,7 +43,7 @@ class UserController extends Controller
 
         $user->rank_id = $request->rank;
         
-        $rank = Rank::where('id', $request->position)->first();
+        $rank = Rank::where('id', $request->rank)->first();
         $user->rank_name = $rank->name;
 
         // if($request->has('job')) {

@@ -73,7 +73,7 @@
                                 @if(!empty($expens['item']) && !empty($expens['price']))
                                 <tr>
                                     <td class="text-center">
-                                        <input type="text" class="form-control" id="item1" name="item1" placeholder="항목1" value="{{ $expens['item']}}">
+                                        <input type="text" class="form-control" id="item1" name="item1" placeholder="항목1" value="{{$expens['item_name']}}({{ $expens['item']}})">
                                     </td>
                                     <td class="text-center">
                                         <input type="text" class="form-control" id="content1" name="content1" placeholder="내용1" value="{{ $expens['content']}}">
@@ -144,7 +144,7 @@
                             @endforeach
                             @else
                             <button type="button" class="btn btn-danger pull-right" data-toggle="modal" data-target="#rejFormModal" >반려</button>
-                            <form action="{{ route('iheart.support_leader.apr') }}" method="post" id="aprForm">  
+                            <form action="{{ route('iheart.support_leader.documents.apr') }}" method="post" id="aprForm">  
                                 {{ csrf_field() }}
                                 <input type="hidden" name="document_id" value="{{$document->id}}">
                                 <button type="submit" class="btn btn-default pull-right" id="aprBtn">승인</button>  
@@ -179,7 +179,7 @@
                 <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
                 <h4 class="modal-title" id="rejModalLabel">전자결재 반려</h4>
             </div>
-            <form action="{{ route('iheart.support_leader.reject') }}" method="post" id="rejectForm">  
+            <form action="{{ route('iheart.support_leader.documents.reject') }}" method="post" id="rejectForm">  
                 {{ csrf_field() }}
                 <input type="hidden" name="document_id" value="{{$document->id}}">
                 <div class="modal-body">      

@@ -103,7 +103,7 @@ class DatabaseSeeder extends Seeder
         $support_team = Team::where('name', '경영지원팀')->first();
         $support_leader->team_id = $support_team->id;
         $support_leader->save();
-        $support_leader->attachRole(3);
+        $support_leader->attachRole(5);
     }
 
 

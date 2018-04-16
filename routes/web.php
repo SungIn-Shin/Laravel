@@ -84,17 +84,21 @@ Route::group(['prefix' => 'iheart'], function (){
 
     // 경영지원 팀장
     Route::group(['prefix' => 'support_leader', 'middleware' => ['role:support_leader']], function() {
-        Route::get('regist',                'DocumentController@registForm')->name('ihart.support_leader.regist');
+        Route::group(['prefix' => 'documents'], function () {
+            Route::get('regist',                'DocumentController@registForm')->name('ihart.support_leader.documents.regist');
     
-        Route::post('regist',               'DocumentController@insertDocument')->name('iheart.support_leader.regist');
-    
-        Route::get('list',                  'DocumentController@selectSupportLeaderDocumentsList')->name('iheart.support_leader.list');
-    
-        Route::get('detail/{document_id}',  'DocumentController@documentDetail')->name('iheart.support_leader.detail');
-        // 반려 처리
-        Route::post('reject',               'DocumentController@supportLeaderReject')->name('iheart.support_leader.reject');
-        // 승인 처리
-        Route::post('apr',                  'DocumentController@supportLeaderApr')->name('iheart.support_leader.apr');
+            Route::post('regist',               'DocumentController@insertDocument')->name('iheart.support_leader.documents.regist');
+        
+            Route::get('list',                  'DocumentController@selectSupportLeaderDocumentsList')->name('iheart.support_leader.documents.list');
+        
+            Route::get('detail/{document_id}',  'DocumentController@documentDetail')->name('iheart.support_leader.documents.detail');
+            // 반려 처리
+            Route::post('reject',               'DocumentController@supportLeaderReject')->name('iheart.support_leader.documents.reject');
+            // 승인 처리
+            Route::post('apr',                  'DocumentController@supportLeaderApr')->name('iheart.support_leader.documents.apr');
+
+            Route::get('accountinglist',        'DocumentController@accountingList')->name('iheart.support_leader.documents.accountinglist');
+        });
     });
 
     // 조직도

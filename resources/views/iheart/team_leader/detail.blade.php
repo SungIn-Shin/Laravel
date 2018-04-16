@@ -75,7 +75,7 @@
                                 @if(!empty($expens['item']) && !empty($expens['price']))
                                 <tr>
                                     <td class="text-center">
-                                        <input type="text" class="form-control" id="item1" name="item1" placeholder="항목1" value="{{ $expens['item']}}">
+                                        <input type="text" class="form-control" id="item1" name="item1" placeholder="항목1" value="{{$expens['item_name']}}({{ $expens['item']}})">
                                     </td>
                                     <td class="text-center">
                                         <input type="text" class="form-control" id="content1" name="content1" placeholder="내용1" value="{{ $expens['content']}}">

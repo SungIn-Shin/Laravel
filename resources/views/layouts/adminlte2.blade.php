@@ -426,8 +426,6 @@
 
         {{--  사용자 정의 사이드바  --}}
         @role('admin')
-        
-
         <li class="active treeview">
           <a href="#">
             <i class="fa fa-laptop"></i>
@@ -483,39 +481,22 @@
           </ul>
         </li>
         <!-- 로그 -->
-          <li class="active treeview">
-            <a href="#">
-              <i class="fa fa-laptop"></i>
-              <span>팀 관리</span>
-              <span class="pull-right-container">
-                <i class="fa fa-angle-left pull-right"></i>
-              </span>
-            </a>
-            <ul class="treeview-menu">
-              <li>
-                  <a href="{{ route('iheart.admin.teams.show')}}">
-                    <i class="fa fa-circle-o"></i> <span>팀 관리</span>                
-                </a>    
-              </li>
-            </ul>
-          </li>
-
-          <li class="active treeview">
-            <a href="#">
-              <i class="fa fa-laptop"></i>
-              <span>조직도 관리</span>
-              <span class="pull-right-container">
-                <i class="fa fa-angle-left pull-right"></i>
-              </span>
-            </a>
-            <ul class="treeview-menu">
-              <li>
-                  <a href="{{ route('iheart.admin.teams.show')}}">
-                    <i class="fa fa-circle-o"></i> <span>조직도 구성 관리</span>                
-                </a>    
-              </li>
-            </ul>
-          </li>
+        <li class="active treeview">
+          <a href="#">
+            <i class="fa fa-laptop"></i>
+            <span>조직도 관리</span>
+            <span class="pull-right-container">
+              <i class="fa fa-angle-left pull-right"></i>
+            </span>
+          </a>
+          <ul class="treeview-menu">
+            <li>
+                <a href="{{ route('iheart.admin.teams.show')}}">
+                  <i class="fa fa-circle-o"></i> <span>조직도 구성 관리</span>                
+              </a>    
+            </li>
+          </ul>
+        </li>
 
         @endrole
 
@@ -556,14 +537,31 @@
           </a>
           <ul class="treeview-menu">
             <li>
-              <a href="{{ url('/iheart/support_leader/regist')}}">
+              <a href="{{ url('/iheart/support_leader/documents/regist')}}">
                   <i class="fa fa-th"></i> <span>지출품의서등록</span>                
               </a>    
             </li>
             <li>
-              <a href="{{ url('/iheart/support_leader/list')}}">
+              <a href="{{ url('/iheart/support_leader/documents/list')}}">
                   <i class="fa fa-th"></i> <span>지출품의서조회</span>
               </a>
+            </li>
+          </ul>
+        </li>
+
+        <li class="active treeview">
+          <a href="#">
+            <i class="fa fa-laptop"></i>
+            <span>회계조회</span>
+            <span class="pull-right-container">
+              <i class="fa fa-angle-left pull-right"></i>
+            </span>
+          </a>
+          <ul class="treeview-menu">
+            <li>
+              <a href="{{ url('/iheart/support_leader/documents/accountinglist')}}">
+                  <i class="fa fa-th"></i> <span>회계(?) 조회</span>                
+              </a>    
             </li>
           </ul>
         </li>

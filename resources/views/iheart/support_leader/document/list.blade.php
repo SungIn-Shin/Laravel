@@ -20,7 +20,7 @@
     <div class="row">
         <div class="col-lg-12">
             <div class="box box-primary">  
-                <form action="{{ route('iheart.support_leader.list') }}" action="GET">
+                <form action="{{ route('iheart.support_leader.documents.list') }}" action="GET">
                     {{ csrf_field() }}
                     <div class="box-body">
                         <div class="row">
@@ -108,7 +108,7 @@
                                 @endif
                                     <td class="text-center">{{$document->team->name}}</td>
                                     <td class="text-center">{{$document->user->name}}</td>
-                                    <td class="text-center"><a href="{{ route('iheart.support_leader.detail', $document->id) }}">  {{ $document->document_name }} </a></td> 
+                                    <td class="text-center"><a href="{{ route('iheart.support_leader.documents.detail', $document->id) }}">  {{ $document->document_name }} </a></td> 
                                     <td class="text-center">{{ $document->document_type }}</td>
                                     <td class="text-center">{{ $document->created_at }}</td>
                                     <td class="text-center">

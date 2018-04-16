@@ -104,7 +104,7 @@
                                         <option value="">직책 선택</option>
                                         @foreach ($positions as $position)
                                             <option value="{{$position->id}}" {{ old('position') == $position->id ? 'selected' : '' }}>
-                                                {{$jpositionob->name}}
+                                                {{$position->name}}
                                             </option>
                                         @endforeach
                                     </select>

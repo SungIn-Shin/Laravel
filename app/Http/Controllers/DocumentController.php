@@ -252,31 +252,29 @@ class DocumentController extends Controller
 
     public function accountingList(Request $request) 
     {
+        // dd(date('m'));
         $query = Document::query();
-        
-        if($request->has('team_id')) { 
-            $team_id = $request->team_id;
-            $query->where('team_id', $team_id);
-        }
-
-        if($request->has('user_name')){
-            $user_name = $request->user_name;
-            $users = User::where('name', 'like', '%'.$user_name.'%')->pluck('id'); // id만 array로 반환해줌.
-            $query->whereIn('user_id', $users);
-        }
 
         if($request->has('year')) {
             $year = $request->year;
             $query->whereYear('created_at', $year);
+        } else {
+            $year = intval(date('Y'));
+            $query->whereYear('created_at', $year);
+            $request->year = $year;
         }
 
         if($request->has('month')) {
             $month = $request->month;
             $query->whereMonth('created_at', $month);
+        } else {
+            $month = intval(date('m'));
+            $query->whereMonth('created_at', $month);
+            $request->month = $month;
         }
 
-        $documents = $query->orderBy('created_at', 'desc');
+        $documents = $query->orderBy('created_at', 'desc')->get();
         
-        return view('iheart.support_leader.document.accountinglist')->with(['documents' => $documents]);
+        return view('iheart.support_leader.document.accountinglist')->with(['documents' => $documents, 'request' => $request]);
     }
 }

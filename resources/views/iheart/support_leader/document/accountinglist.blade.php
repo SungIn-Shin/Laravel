@@ -1,5 +1,12 @@
 @extends('layouts.adminlte2')
 @section('content')
+
+<script type="text/javascript">
+    $( document ).ready(function() {
+     
+    });
+</script>
+
 <!-- Content Wrapper. Contains page content -->
 <div class="content-wrapper">
 <!-- Content Header (Page header) -->
@@ -20,40 +27,33 @@
     <div class="row">
         <div class="col-lg-12">
             <div class="box box-primary">  
-                <form action="{{ route('iheart.support_leader.documents.list') }}" action="GET">
+                <form action="{{ route('iheart.support_leader.documents.accountinglist') }}" action="GET">
                     {{ csrf_field() }}
                     <div class="box-body">
                         <div class="row">
                             
                             <div class="col-lg-3 col-md-12">
                                 <select id="year" name="year" class="form-control">
-                                    <option value="2018">연도 선택</option>
-                                    <option value="2018">2018년</option>
-                                    <option value="2017">2017년</option>
-                                    <option value="2016">2016년</option>
-                                    <option value="2015">2015년</option>
-                                    <option value="2014">2014년</option>
-                                    <option value="2013">2013년</option>
-                                    <option value="2012">2012년</option>
-                                    <option value="2011">2011년</option>
-                                    <option value="2010">2010년</option>
+                                    <option value="">연도 선택</option>
+                                    @for($i = intval(date('Y')); $i >= 2016 ; $i--) 
+                                        @if ($request->year == $i) 
+                                            <option value="{{$i}}" selected>{{$i}}년</option>
+                                        @else 
+                                            <option value="{{$i}}">{{$i}}년</option>
+                                        @endif
+                                    @endfor
                                 </select>
                             </div>
                             <div class="col-lg-3 col-md-12">
                                 <select id="month" name="month" class="form-control">
                                     <option value="">월 선택</option>
-                                    <option value="1">1월</option>
-                                    <option value="2">2월</option>
-                                    <option value="3">3월</option>
-                                    <option value="4">4월</option>
-                                    <option value="5">5월</option>
-                                    <option value="6">6월</option>
-                                    <option value="7">7월</option>
-                                    <option value="8">8월</option>
-                                    <option value="9">9월</option>
-                                    <option value="10">10월</option>
-                                    <option value="11">11월</option>
-                                    <option value="12">12월</option>
+                                    @for($i = 1; $i <= 12 ; $i++) 
+                                    @if ($request->month == $i) 
+                                        <option value="{{$i}}" selected>{{$i}}월</option>
+                                    @else 
+                                        <option value="{{$i}}">{{$i}}월</option>
+                                    @endif
+                                    @endfor
                                 </select>
                             </div>
 
@@ -83,12 +83,12 @@
                             </thead>
                             <tbody>
                                 @foreach ($documents as $document)
-                                    @foreach ($documents->expenditure_historys as $expenditure)
+                                    @foreach ( json_decode($document->expenditure_historys, true) as $expenditure)
                                     <tr>
-                                        <td>{{$document->user->name}}</td>    
-                                        <td>{{$expenditure['item_name']}}</td>
-                                        <td></td>
-                                        <td></td>
+                                        <td class="text-center">{{$document->user->name}}</td>    
+                                        <td class="text-center">{{$expenditure['item_name'] . '('.$expenditure['item'].')'}}</td>
+                                        <td class="text-center">{{$expenditure['content']}}</td>
+                                        <td class="text-center">{{number_format($expenditure['price'])}} 원</td>
                                     </tr> 
                                     @endforeach
                                 @endforeach

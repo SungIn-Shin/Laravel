@@ -79,7 +79,7 @@
                                         <input type="text" class="form-control" id="content1" name="content1" placeholder="내용1" value="{{ $expens['content']}}">
                                     </td>
                                     <td class="text-center">
-                                        <input type="number" class="form-control" id="price1" name="price1" placeholder="금액1" value="{{ $expens['price'] }}">
+                                        <input type="text" class="form-control" id="price1" name="price1" placeholder="금액1" value="{{ number_format($expens['price']) }}">
                                     </td>
                                 </tr>
                                 @endif

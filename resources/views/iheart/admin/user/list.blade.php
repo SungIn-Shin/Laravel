@@ -33,6 +33,8 @@
                                         <th>직책</th>
                                         <th>이메일</th>
                                         <th>등록일시</th>
+                                        <th>최근로그인일자</th>
+                                        <th>최근7일로그인수</th>
                                         <th>사용여부</th>
                                     </tr>       
                                 </tr>                                    
@@ -46,15 +48,26 @@
                                     <td>{{ $user->position_name}}</td>
                                     <td>{{ $user->email}}</td>
                                     <td>{{ $user->created_at}}</td>
+                                    <td>
+                                        {{ $user->lastdate}}
+                                        @if (!empty($user->counter30) && $user->counter30 == 0)
+                                        <br><span class="text-danger">(최근30일이내로그인없음)</span>
+                                        @endif
+                                    </td>
+                                    @if (empty($user->counter7))
+                                        <td>0</td>
+                                    @else
+                                        <td>{{ $user->counter7 }}</td>
+                                    @endif
                                     {{-- @if (empty($user->deleted_at))
                                         <td>사용중</td>
                                     @else
                                         <td>미사용</td>
                                     @endif --}}
                                     @if ($user->useyn == 'Y')
-                                        <td>사용중</td>
+                                        <td><span class='text-success'>사용중</span></td>
                                     @else
-                                        <td>미사용</td>
+                                        <td><span class='text-danger'>미사용</span></td>
                                     @endif
                                     
                                 </tr>

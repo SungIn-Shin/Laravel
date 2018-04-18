@@ -11,6 +11,9 @@ use App\ExpenditureHistory;
 use App\ApprovalLine;
 use App\ExpenditureItem;
 
+use Mail;
+use App\Mail\RejectMailer;
+
 use DB;
 use Image;
 use Illuminate\Support\Facades\Storage;
@@ -151,7 +154,9 @@ class DocumentController extends Controller
         $comment->content   = $request->content;
         $document->comments()->save($comment);
 
-        return redirect()->route('iheart.team_leader.list');        
+        Mail::to($document->user->email)->queue(new RejectMailer($document));
+
+        return redirect()->route('iheart.team_leader.list');
     }
 
     // 팀장 승인처리
@@ -178,6 +183,8 @@ class DocumentController extends Controller
         $comment->title     = $request->title;
         $comment->content   = $request->content;
         $document->comments()->save($comment);
+
+        Mail::to($document->user->email)->queue(new RejectMailer($document));
 
         return redirect()->route('iheart.support_leader.documents.list');        
     }

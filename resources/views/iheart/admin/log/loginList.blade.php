@@ -80,7 +80,7 @@
             <div class="box box-primary">                   
                 <div class="box-body">
                     <div class="row">                            
-                        <table class="table">
+                        <table class="table table-hover">
                             <thead>
                                 <tr>
                                     <tr>

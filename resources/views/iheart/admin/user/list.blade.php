@@ -23,7 +23,7 @@
             <div class="box box-primary">                   
                 <div class="box-body">
                     <div class="row">                            
-                        <table class="table">
+                        <table class="table table-hover">
                             <thead>
                                 <tr>
                                     <tr>
@@ -41,7 +41,11 @@
                             </thead>
                             <tbody>
                                 @foreach ($users as $user)
-                                <tr id="tr{{$user->id}}" style="cursor:pointer;" onclick="location.href='{{url('/iheart/admin/users/detail', $user->id)}}'">
+                                <tr id="tr{{$user->id}}" style="cursor:pointer;" onclick="location.href='{{url('/iheart/admin/users/detail', $user->id)}}'"
+                                    @if ($user->useyn == 'N')
+                                        class="danger"
+                                    @endif
+                                    >
                                     <td>{{ $user->team->name }}</td>
                                     <td>{{ $user->name }}</td>
                                     <td>{{ $user->rank_name}}</td>
@@ -64,10 +68,10 @@
                                     @else
                                         <td>미사용</td>
                                     @endif --}}
-                                    @if ($user->useyn == 'Y')
-                                        <td><span class='text-success'>사용중</span></td>
-                                    @else
+                                    @if ($user->useyn == 'N')
                                         <td><span class='text-danger'>미사용</span></td>
+                                    @else
+                                        <td><span class='text-success'>사용중</span></td>
                                     @endif
                                     
                                 </tr>

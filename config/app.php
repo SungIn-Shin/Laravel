@@ -126,6 +126,21 @@ return [
 
     /*
     |--------------------------------------------------------------------------
+    | Request Log (2018.04.19 KKW)
+    | 'log_request' - Request Log 기록 여부
+    |    Available Settings : true, false
+    | 'log_request_anonymous' - 로그인이 안된 상태의 Request Log 를 기록할지 여부
+    |      ('log_request' 가 true 일때만 적용됨, 'log_request' 가 fasle 이면 의미없음)
+    |    Available Settings : true, false
+    |--------------------------------------------------------------------------
+    */
+
+    'log_request' => true,
+
+    'log_request_anonymous' => false,
+
+    /*
+    |--------------------------------------------------------------------------
     | Autoloaded Service Providers
     |--------------------------------------------------------------------------
     |

@@ -51,7 +51,9 @@ Route::group(['prefix' => 'iheart'], function (){
         // 슈퍼관리자 로그 (2018.04.10 KKW)
         Route::group(['prefix' => 'log'], function () {
             // 로그인로그 조회
-            Route::get('loginlist',        'LogController@loginList')->name('iheart.admin.log.loginList');
+            Route::get('loginlist',         'LogController@loginList')->name('iheart.admin.log.loginList');
+            // request 로그 조회 (2018.04.19 KKW)
+            Route::get('requestlist',       'LogController@requestList')->name('iheart.admin.log.requestList');
         });
 
     });

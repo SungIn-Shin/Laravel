@@ -481,6 +481,13 @@
               </a>    
             </li>
           </ul>
+          <ul class="treeview-menu">
+              <li>
+                <a href="{{ route('iheart.admin.log.requestList')}}">
+                  <i class="fa fa-circle-o"></i> <span>REQUEST로그</span>                
+                </a>    
+              </li>
+            </ul>
         </li>
         <!-- 로그 -->
           <li class="active treeview">

@@ -126,9 +126,22 @@ return [
 
     /*
     |--------------------------------------------------------------------------
-    | Request Log (2018.04.19 KKW)
-    | 'log_request' - Request Log 기록 여부
+    | Request Log (2018.04.25 KKW)
+    | 'log_query' - Query Log file 기록 여부
     |    Available Settings : true, false
+    |      (/storage/logs 폴더에 querylog-YYYY-MM-DD.log 로 생성)
+    |    Available Settings : true, false
+    |--------------------------------------------------------------------------
+    */
+
+    'log_query' => false,
+
+    /*
+    |--------------------------------------------------------------------------
+    | Request Log (2018.04.19 KKW)
+    | 'log_request' - Request Log DB 기록 여부
+    |    Available Settings : true, false
+    |      (DB log_requests 테이블에 기록)
     | 'log_request_anonymous' - 로그인이 안된 상태의 Request Log 를 기록할지 여부
     |      ('log_request' 가 true 일때만 적용됨, 'log_request' 가 fasle 이면 의미없음)
     |    Available Settings : true, false

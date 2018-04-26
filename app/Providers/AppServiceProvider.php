@@ -3,9 +3,6 @@
 namespace App\Providers;
 
 use Illuminate\Support\ServiceProvider;
-// use Validator;
-// use DB; // (2018.04.25 KKW)
-// use Log; // (2018.04.25 KKW)
 
 use Illuminate\Support\Facades\App;
 use Illuminate\Support\Facades\Event;
@@ -49,20 +46,5 @@ class AppServiceProvider extends ServiceProvider
     public function register()
     {
         //
-        
-        // 쿼리 로그 (2018.04.25 KKW)
-        // if ( config('app.log_query') ) {
-        //     Event::listen('Illuminate\Database\Events\QueryExecuted', function ($query) {
-        //         // oauth 제외하고 나머지 sql 기록
-        //         if (!str_contains($query->sql, 'oauth')) {
-        //             Log::useDailyFiles(storage_path().'/logs/querylog.log');
-        //             Log::info('query log', [
-        //                 'sql' => $query->sql,
-        //                 'bindings' => $query->bindings
-        //             ]);
-        //         }
-        //     });
-        // }
-        
     }
 }

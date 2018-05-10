@@ -42,6 +42,6 @@ class CreateRanksAndPositionsTable extends Migration
     {
         //
         Schema::dropIfExists('positions');
-        Schema::dropIfExists('jobs');
+        Schema::dropIfExists('ranks');
     }
 }

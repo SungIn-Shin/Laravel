@@ -11,11 +11,14 @@
 |
 */
 
+Route::get('/info', function () {
+    return view('phpinfo');
+});
 
 Route::get('/home', 'HomeController@index')->name('home');
 Route::get('/', 'HomeController@index')->name('index');
 
-
+Route::get('excelDown', 'DocumentController@excelDown')->name('iheart.support_leader.documents.excelDown');
 
 Auth::routes();
 
@@ -98,6 +101,8 @@ Route::group(['prefix' => 'iheart'], function (){
             Route::post('apr',                  'DocumentController@supportLeaderApr')->name('iheart.support_leader.documents.apr');
 
             Route::get('accountinglist',        'DocumentController@accountingList')->name('iheart.support_leader.documents.accountinglist');
+
+            
         });
     });
 
@@ -112,7 +117,7 @@ Route::group(['prefix' => 'iheart'], function (){
 Route::get('send', 'MailController@send')->name('iheart.mail.send');
 
 
-
+Route::get('excel','MailController@excel')->name('iheart.mail.excel');
 
 
 

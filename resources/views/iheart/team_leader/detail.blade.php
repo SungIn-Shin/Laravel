@@ -185,13 +185,23 @@
                 {{ csrf_field() }}
                 <input type="hidden" name="document_id" value="{{$document->id}}">
                 <div class="modal-body">      
-                    <div class="row">
+                    <div class="row form-group{{ $errors->has('role') ? ' has-error' : '' }}">
                         <label for="title">제목</label>
-                        <input type="text" class="form-control" name="title" id="title" placeholder="제목을 입력하세요." >
+                        <input type="text" class="form-control" name="title" id="title" placeholder="제목을 입력하세요." required>
+                        @if ($errors->has('title'))
+                        <span class="help-block">
+                            <strong>{{ $errors->first('title') }}</strong>
+                        </span>
+                        @endif
                     </div>
-                    <div class="row">
+                    <div class="row form-group{{ $errors->has('role') ? ' has-error' : '' }}">
                     <label for="exTable">반려사유</label>
-                    <textarea id="content" name="content" class="form-control" rows="3" placeholder="반려사유를 작성하세요."></textarea>
+                    <textarea id="content" name="content" class="form-control" rows="3" placeholder="반려사유를 작성하세요." required></textarea>
+                    @if ($errors->has('content'))
+                    <span class="help-block">
+                        <strong>{{ $errors->first('content') }}</strong>
+                    </span>
+                    @endif
                     </div>
                 </div>
                 <div class="modal-footer">                

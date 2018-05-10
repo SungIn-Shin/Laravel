@@ -52,7 +52,8 @@ class DatabaseSeeder extends Seeder
                                     'rank_id' => 1, 
                                     'rank_name' => '관리자', 
                                     'position_id' => 1,
-                                    'position_name' => '관리자'
+                                    'position_name' => '관리자', 
+                                    'otpkey' =>'AAAABBBBCCCCDDDD'
                  ]);        
         
         $super_team = Team::where('name', '관리자')->first();
@@ -67,7 +68,8 @@ class DatabaseSeeder extends Seeder
             'email' => 'employee'.$i.'@i-heart.co.kr', 
             'password' => bcrypt('employee'.$i),
             'rank_id' => 7, 
-            'rank_name' => "사원", 
+            'rank_name' => "사원",
+            'otpkey' =>'AAAABBBBCCCCDDDD'
             ]);        
             $nomal_team = Team::where('name', '개발팀')->first();
             $nomal_user->team_id = $nomal_team->id;
@@ -83,8 +85,9 @@ class DatabaseSeeder extends Seeder
                                     'rank_id' => 4,
                                     'rank_name' => '차장', 
                                     'position_id' => 4, 
-                                    'position_name' => '팀장'
-        ]);        
+                                    'position_name' => '팀장', 
+                                    'otpkey' =>'AAAABBBBCCCCDDDD'
+        ]);
         $dev_team = Team::where('name', '개발팀')->first();
         $team_leader->team_id = $dev_team->id;
         $team_leader->save();
@@ -98,7 +101,8 @@ class DatabaseSeeder extends Seeder
                                     'rank_id' => 4,
                                     'rank_name' => '차장', 
                                     'position_id' => 4, 
-                                    'position_name' => '팀장'
+                                    'position_name' => '팀장', 
+                                    'otpkey' =>'AAAABBBBCCCCDDDD'
         ]);        
         $support_team = Team::where('name', '경영지원팀')->first();
         $support_leader->team_id = $support_team->id;

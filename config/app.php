@@ -177,12 +177,14 @@ return [
         App\Providers\EventServiceProvider::class,
         App\Providers\RouteServiceProvider::class,
         
-        Unisharp\Ckeditor\ServiceProvider::class,
+        // Unisharp\Ckeditor\ServiceProvider::class,
         // Role..
         Zizaco\Entrust\EntrustServiceProvider::class,
 
         Barryvdh\Debugbar\ServiceProvider::class,
 
+        // excel add by ssi - 2018-04-19
+        Maatwebsite\Excel\ExcelServiceProvider::class, 
     ],
 
     /*
@@ -236,7 +238,9 @@ return [
         'Entrust'   => Zizaco\Entrust\EntrustFacade::class,
 
         'Debugbar' => Barryvdh\Debugbar\Facade::class,
-
+        
+        // excel add by ssi - 2018-04-19
+        'Excel' => Maatwebsite\Excel\Facades\Excel::class,
     ],
 
 ];

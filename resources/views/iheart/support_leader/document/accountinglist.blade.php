@@ -68,6 +68,19 @@
         </div>
     </div>
     <div class="row">
+        <div class="col-lg-12 pull-right">
+            <form action="{{ route('iheart.support_leader.documents.excelDown') }}" method="get">
+                <input type="hidden" name="year" value="{{$request->year}}">
+                <input type="hidden" name="month" value="{{$request->month}}">
+                <button type="submit" class="btn btn-default pull-right" id="aprBtn">엑셀다운</button> 
+            </form>
+           
+        </div>
+    </div>
+
+    <br>
+
+    <div class="row">
         <div class="col-lg-12">
             <div class="box box-primary">                   
                 <div class="box-body">
@@ -86,7 +99,7 @@
                                     @foreach ( json_decode($document->expenditure_historys, true) as $expenditure)
                                     <tr>
                                         <td class="text-center">{{$document->user->name}}</td>    
-                                        <td class="text-center">{{$expenditure['item_name'] . '('.$expenditure['item'].')'}}</td>
+                                        <td class="text-center">{{$expenditure['item_name'] . '(' . $expenditure['item'] . ')'}}</td>
                                         <td class="text-center">{{$expenditure['content']}}</td>
                                         <td class="text-center">{{number_format($expenditure['price'])}} 원</td>
                                     </tr> 

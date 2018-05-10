@@ -6,6 +6,12 @@ use Illuminate\Http\Request;
 use Mail;
 use App\Mail\SendMail;
 use App\Mail\RejectMailer;
+
+
+use Excel;
+
+
+
 class MailController extends Controller
 {
     //
@@ -18,5 +24,12 @@ class MailController extends Controller
         //     $message->to('tlstjddls123@naver.com', 'To SungIn')->subject('TestMail');
         //     $message->from('tlstjddls123@gmail.com', 'SUngIn');
         // });
+    }
+
+    public function excel() {
+        Excel::create('ExcelName')
+        ->sheet('SheetName')                 
+            ->with(array('data', 'data'))             
+        ->export('xls');
     }
 }

@@ -20,6 +20,11 @@ use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Facades\File;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Http\Request;
+use Validator;
+
+use Excel;
+
+use App\Exports\AccountingExport;
 
 class DocumentController extends Controller
 {
@@ -143,20 +148,28 @@ class DocumentController extends Controller
     // 팀장 반려처리
     public function teamLeaderReject(Request $request) 
     {
-        $document_id = $request->document_id;
-        $document = Document::find($document_id);
-        $document->tl_inspection_status = "REJ";
-        $document->save();
+        $validation = Validator::make($request->all(), ['title' => 'required', 'content' => 'required']);
 
-        $comment = new Comment;
-        $comment->writer    = Auth::user()->name;
-        $comment->title     = $request->title;
-        $comment->content   = $request->content;
-        $document->comments()->save($comment);
+        if (!$validation->fails()) {
+            $document_id = $request->document_id;
+            $document = Document::find($document_id);
+            $document->tl_inspection_status = "REJ";
+            $document->save();
 
-        Mail::to($document->user->email)->queue(new RejectMailer($document));
+            $comment = new Comment;
+            $comment->writer    = Auth::user()->name;
+            $comment->title     = $request->title;
+            $comment->content   = $request->content;
+            $document->comments()->save($comment);
 
-        return redirect()->route('iheart.team_leader.list');
+            Mail::to($document->user->email)->queue(new RejectMailer($document));
+
+            return redirect()->route('iheart.team_leader.list');
+        }
+        else {
+            return redirect()->back()->withErrors($validation);
+        }
+        
     }
 
     // 팀장 승인처리
@@ -257,10 +270,13 @@ class DocumentController extends Controller
         }        
     }
 
-    public function accountingList(Request $request) 
+    public function accountingList(Request $request)
     {
         // dd(date('m'));
         $query = Document::query();
+
+        $query->where('tl_inspection_status', 'APR');
+        $query->where('sl_inspection_status', 'APR');
 
         if($request->has('year')) {
             $year = $request->year;
@@ -283,5 +299,77 @@ class DocumentController extends Controller
         $documents = $query->orderBy('created_at', 'desc')->get();
         
         return view('iheart.support_leader.document.accountinglist')->with(['documents' => $documents, 'request' => $request]);
+    }
+
+
+    public function excelDown(Request $request)
+    {
+        $query = Document::query();
+
+        $query->where('tl_inspection_status', 'APR');
+        $query->where('sl_inspection_status', 'APR');
+
+        if($request->has('year')) {
+            $year = $request->year;
+            $query->whereYear('created_at', $year);
+        } else {
+            $year = intval(date('Y'));
+            $query->whereYear('created_at', $year);
+            $request->year = $year;
+        }
+
+        if($request->has('month')) {
+            $month = $request->month;
+            $query->whereMonth('created_at', $month);
+        } else {
+            $month = intval(date('m'));
+            $query->whereMonth('created_at', $month);
+            $request->month = $month;
+        }
+
+        $documents = $query->orderBy('created_at', 'desc')->get();
+
+        $fileName = '회계정산_'.date('Ymd');
+        // dd($documents);
+        $excel = Excel::create( $fileName , function($excel) use ($documents, $fileName) {
+             // Our first sheet
+            $excel->sheet( $fileName, function($sheet)  use ($documents){
+                $sheet->cell('A1', function($cell) { 
+                    $cell->setValue('계정'); 
+                    $cell->setBackground('#CCCCCC');
+                    $cell->setFontWeight('bold');
+                    $cell->setBorder('solid', 'none', 'none', 'solid');
+                });
+                $sheet->cell('B1', function($cell) { 
+                    $cell->setValue('ITEM_NAME'); 
+                    $cell->setBackground('#CCCCCC');
+                    $cell->setFontWeight('bold');
+                    $cell->setBorder('solid', 'none', 'none', 'solid');
+                });
+                $sheet->cell('C1', function($cell) { 
+                    $cell->setValue('ITEM'); 
+                    $cell->setBackground('#CCCCCC');
+                    $cell->setFontWeight('bold');
+                    $cell->setBorder('solid', 'none', 'none', 'solid');
+                });
+                $sheet->cell('D1', function($cell) {
+                    $cell->setValue('CONTENT'); 
+                    $cell->setBackground('#CCCCCC');
+                    $cell->setFontWeight('bold');
+                    $cell->setBorder('solid', 'none', 'none', 'solid');
+                });
+
+                foreach($documents as $key => $document) {
+                   $i= $key+2;
+                   foreach(json_decode($document->expenditure_historys, true) as  $expenditure) {
+                        $sheet->cell('A'.$i, $document->user->name); 
+                        $sheet->cell('B'.$i, $expenditure['item_name']); 
+                        $sheet->cell('C'.$i, $expenditure['item']); 
+                        $sheet->cell('D'.$i, $expenditure['content']); 
+                   }
+                }
+                // $sheet->fromArray($documents->toArray());
+            });
+        })->download('xls');
     }
 }

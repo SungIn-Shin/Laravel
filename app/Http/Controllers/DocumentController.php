@@ -111,7 +111,7 @@ class DocumentController extends Controller
     }
 
 
-    public function selectTeamLeaderDocumentsList(Request $request) 
+    public function selectTeamLeaderDocumentsList(Request $request)
     {
         $team_id = Auth::user()->team_id;
         $documents = new Document;
@@ -129,17 +129,32 @@ class DocumentController extends Controller
 
         $document = Document::find($document_id);
 
+        $team = Team::find($document->team_id);
+
         $expenditure_historys = json_decode($document->expenditure_historys, true);
         // dd($expenditure_historys);
         // 권한별 페이지 변경
+        
         if($user->hasRole('employee')) {
-            return view('iheart.employee.detail')->with(['document' => $document, 'expenditure_historys' => $expenditure_historys]);
+            return view('iheart.employee.detail')->with([   'document'              => $document, 
+                                                            'team'                  => $team,
+                                                            'expenditure_historys'  => $expenditure_historys
+                                                        ]);
         } else if ($user->hasRole('team_leader')) {
-            return view('iheart.team_leader.detail')->with(['document' => $document, 'expenditure_historys' => $expenditure_historys]);
+            return view('iheart.team_leader.detail')->with([    'document'              => $document, 
+                                                                'team'                  => $team,
+                                                                'expenditure_historys'  => $expenditure_historys
+                                                            ]);
         } else if ($user->hasRole('support_leader')) {
-            return view('iheart.support_leader.document.detail')->with(['document' => $document, 'expenditure_historys' => $expenditure_historys]);
+            return view('iheart.support_leader.document.detail')->with([    'document'              => $document, 
+                                                                            'team'                  => $team,
+                                                                            'expenditure_historys'  => $expenditure_historys
+                                                                        ]);
         } else if ($user->hasRole('admin')) {
-            return view('iheart.admin.detail')->with(['document' => $document, 'expenditure_historys' => $expenditure_historys]);
+            return view('iheart.admin.detail')->with([  'document'              => $document, 
+                                                        'team'                  => $team,   
+                                                        'expenditure_historys'  => $expenditure_historys
+                                                    ]);
         } else {
             abort(403);
         }
@@ -224,10 +239,10 @@ class DocumentController extends Controller
         $user = Auth::user();
         // 2. Document 테이블 Insert
         $document = new Document;
-        $document->user_id = $user->id;
-        $document->team_id = $user->team_id;
-        $document->document_name = $request->document_name;
-        $document->document_type = $request->document_type;
+        $document->user_id          = $user->id;
+        $document->team_id          = $user->team_id;
+        $document->document_name    = $request->document_name;
+        $document->document_type    = $request->document_type;
         $document->document_comment = $request->document_comment;
         $expenditureArr = array();
         // 기존 -> [{"item":"811","content":null,"price":"1234"}]
@@ -235,17 +250,16 @@ class DocumentController extends Controller
         foreach($request->expenditure as $expenditure) {
             if(!empty($expenditure['item'])) {
                 $dataArr = array();
-                $exItem = ExpenditureItem::where('code', $expenditure['item'])->first();;
-                $dataArr['item'] = $expenditure['item'];
-                $dataArr['item_name'] = $exItem->name;
-                $dataArr['content'] = $expenditure['content'];
-                $dataArr['price'] = $expenditure['price'];
+                $exItem  = ExpenditureItem::where('code', $expenditure['item'])->first();
+
+                $dataArr['item']        = $expenditure['item'];
+                $dataArr['item_name']   = $exItem->name;
+                $dataArr['content']     = $expenditure['content'];
+                $dataArr['price']       = $expenditure['price'];
                 array_push($expenditureArr, $dataArr);
             }
         }
         $document->expenditure_historys = json_encode($expenditureArr);
-        // print_r($document->expenditure_historys);
-        // die();
         $document->save();
 
         // 첨부파일 추가
@@ -256,10 +270,10 @@ class DocumentController extends Controller
                 $originName = $file->getClientOriginalName();            
                 // // store('save path');  save path = 지정하지 않을 시 storage 폴더 하위에 생성됨.
                 // // 기본 upload 파일 저장
-                $path = $file->store('public/upload');                
-                $attach = new Attachment;
-                $attach->path = $path;
-                $attach->origin_name = $originName;
+                $path                   = $file->store('public/upload');                
+                $attach                 = new Attachment;
+                $attach->path           = $path;
+                $attach->origin_name    = $originName;
                 $document->attachments()->save($attach);
             }
         }
@@ -275,26 +289,49 @@ class DocumentController extends Controller
         // dd(date('m'));
         $query = Document::query();
 
-        $query->where('tl_inspection_status', 'APR');
-        $query->where('sl_inspection_status', 'APR');
+        $query->where([ 
+            ['tl_inspection_status', '=', 'APR'],
+            ['sl_inspection_status', '=', 'APR']
+        ]);
 
+        $year = strval(date('Y'));
+        $month = strval(date('m'));
+        
         if($request->has('year')) {
             $year = $request->year;
-            $query->whereYear('created_at', $year);
-        } else {
-            $year = intval(date('Y'));
-            $query->whereYear('created_at', $year);
-            $request->year = $year;
         }
 
         if($request->has('month')) {
             $month = $request->month;
-            $query->whereMonth('created_at', $month);
-        } else {
-            $month = intval(date('m'));
-            $query->whereMonth('created_at', $month);
-            $request->month = $month;
         }
+
+        $current_yyyymm = $year.$month;
+        $next_yyyymm = $current_yyyymm + 1;
+
+        $query->where([ ['created_at', '>=' ,date_format($current_yyyymm, 'Y-m-d H:i:s')], 
+                        ['created_at', '<'  ,date_format($next_yyyymm, 'Y-m-d H:i:s')]]);
+
+        // if($request->has('year')) {
+        //     $year = $request->year;
+        //     $query->whereYear('created_at', $year);
+        // } else {
+        //     $year = intval(date('Y'));
+        //     $query->whereYear('created_at', $year);
+        //     $request->year = $year;
+        // }
+
+        // if($request->has('month')) {
+        //     $month = $request->month;
+        //     $query->whereMonth('created_at', $month);
+        // } else {
+        //     $month = intval(date('m'));
+        //     $query->whereMonth('created_at', $month);
+        //     $request->month = $month;
+        // }
+
+       
+
+
 
         $documents = $query->orderBy('created_at', 'desc')->get();
         
@@ -306,8 +343,10 @@ class DocumentController extends Controller
     {
         $query = Document::query();
 
-        $query->where('tl_inspection_status', 'APR');
-        $query->where('sl_inspection_status', 'APR');
+        $query->where([ 
+            ['tl_inspection_status', '=', 'APR'],
+            ['sl_inspection_status', '=', 'APR']
+        ]);
 
         if($request->has('year')) {
             $year = $request->year;
@@ -334,28 +373,47 @@ class DocumentController extends Controller
         $excel = Excel::create( $fileName , function($excel) use ($documents, $fileName) {
              // Our first sheet
             $excel->sheet( $fileName, function($sheet)  use ($documents){
+                $sheet->setWidth(array(
+                    'A'     =>  20,
+                    'B'     =>  20,
+                    'C'     =>  20,
+                    'D'     =>  20,
+                    'E'     =>  20,
+                ));
+
                 $sheet->cell('A1', function($cell) { 
                     $cell->setValue('계정'); 
                     $cell->setBackground('#CCCCCC');
                     $cell->setFontWeight('bold');
+                    $cell->setAlignment('center');
                     $cell->setBorder('solid', 'none', 'none', 'solid');
                 });
                 $sheet->cell('B1', function($cell) { 
                     $cell->setValue('ITEM_NAME'); 
                     $cell->setBackground('#CCCCCC');
                     $cell->setFontWeight('bold');
+                    $cell->setAlignment('center');
                     $cell->setBorder('solid', 'none', 'none', 'solid');
                 });
                 $sheet->cell('C1', function($cell) { 
-                    $cell->setValue('ITEM'); 
+                    $cell->setValue('ITEM_NUMBER'); 
                     $cell->setBackground('#CCCCCC');
                     $cell->setFontWeight('bold');
+                    $cell->setAlignment('center');
                     $cell->setBorder('solid', 'none', 'none', 'solid');
                 });
                 $sheet->cell('D1', function($cell) {
                     $cell->setValue('CONTENT'); 
                     $cell->setBackground('#CCCCCC');
                     $cell->setFontWeight('bold');
+                    $cell->setAlignment('center');
+                    $cell->setBorder('solid', 'none', 'none', 'solid');
+                });
+                $sheet->cell('E1', function($cell) {
+                    $cell->setValue('PRICE'); 
+                    $cell->setBackground('#CCCCCC');
+                    $cell->setFontWeight('bold');
+                    $cell->setAlignment('center');
                     $cell->setBorder('solid', 'none', 'none', 'solid');
                 });
 
@@ -366,10 +424,12 @@ class DocumentController extends Controller
                         $sheet->cell('B'.$i, $expenditure['item_name']); 
                         $sheet->cell('C'.$i, $expenditure['item']); 
                         $sheet->cell('D'.$i, $expenditure['content']); 
+                        $sheet->cell('E'.$i, $expenditure['price']); 
                    }
                 }
                 // $sheet->fromArray($documents->toArray());
             });
         })->download('xls');
     }
+    
 }

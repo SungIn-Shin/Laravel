@@ -45,7 +45,7 @@ class DatabaseSeeder extends Seeder
 
     public function addUserAndAttachRole()
     {
-        // 슈퍼 관리자 계정 삽입.
+        // # 필수 계정 생성. 슈퍼관리자
         $super_user = new User([    'name'  => 'admin', 
                                     'email' => 'admin@i-heart.co.kr', 
                                     'password' => bcrypt('admin'), 
@@ -62,6 +62,10 @@ class DatabaseSeeder extends Seeder
 
         $super_user->attachRole(1);
 
+
+        // # 선택적 계정 생성 (경영지원팀장, 개발팀장, 개발팀) - 테스트용으로 사용할 수 있음.
+
+        
         // 일반사용자 개발팀 4명 추가
         for ($i = 1; $i <= 4; $i++) {
             $nomal_user = new User([    'name'  => 'employee'.$i,

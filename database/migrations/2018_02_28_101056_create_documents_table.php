@@ -24,7 +24,6 @@ class CreateDocumentsTable extends Migration
             $table->string('document_type');                 // 
             $table->string('document_comment')->nullable();              //
             $table->string('tl_inspection_status')->nullable();          // 팀장 검사 상태            APR : 승인, REJ : 반려
-            $table->string('dl_inspection_status')->nullable();          // 부장 검사 상태            APR : 승인, REJ : 반려
             $table->string('sl_inspection_status')->nullable();          // 경영팀장 검사 상태        APR : 승인, REJ : 반려
             $table->string('status')->default('REG');                    // 문서 현재 상태            REG : 등록, APR : 승인, REJ : 반려
             $table->timestamps();

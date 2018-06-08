@@ -185,6 +185,8 @@ return [
 
         // excel add by ssi - 2018-04-19
         Maatwebsite\Excel\ExcelServiceProvider::class, 
+
+        Laravel\Dusk\DuskServiceProvider::class, 
     ],
 
     /*

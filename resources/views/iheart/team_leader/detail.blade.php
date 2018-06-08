@@ -32,7 +32,7 @@
                         </div>          
                         <div class="form-group col-lg-4 col-md-12">
                             <label for="user_name">소속 : </label>
-                            <label id="user_name">{{$document->team->name}}</label>
+                            <label id="user_name">{{$team->name}}</label>
                             </select>            
                         </div>    
 
@@ -71,17 +71,17 @@
                                 </tr>
                             </thead>
                             <tbody>
-                                @foreach($expenditure_historys as $expens)
+                                @foreach($expenditure_historys as $index => $expens)
                                 @if(!empty($expens['item']) && !empty($expens['price']))
                                 <tr>
                                     <td class="text-center">
-                                        <input type="text" class="form-control" id="item1" name="item1" placeholder="항목1" value="{{$expens['item_name']}}({{ $expens['item']}})">
+                                        <input type="text" class="form-control" id="item{{$index}}" name="item" placeholder="항목1" value="{{$expens['item_name']}}({{ $expens['item']}})">
                                     </td>
                                     <td class="text-center">
-                                        <input type="text" class="form-control" id="content1" name="content1" placeholder="내용1" value="{{ $expens['content']}}">
+                                        <input type="text" class="form-control" id="content{{$index}}" name="content" placeholder="내용1" value="{{ $expens['content']}}">
                                     </td>
                                     <td class="text-center">
-                                        <input type="number" class="form-control" id="price1" name="price1" placeholder="금액1" value="{{ $expens['price'] }}">
+                                        <input type="number" class="form-control" id="price{{$index}}" name="price" placeholder="금액1" value="{{ $expens['price'] }}">
                                     </td>
                                 </tr>
                                 @endif
@@ -89,7 +89,7 @@
                                 
                             </tbody>
                             </table>
-                            {{-- <label for="" class="pull-right">합계 : {{$document->expenditureHistorys[0]->price + $document->expenditureHistorys[1]->price + $document->expenditureHistorys[2]->price}} 원</label> --}}
+                            <label id="totalPrice" for="" class="pull-right"></label>
                         </div>
                         <!-- 증빙서류 -->
                         <div class="form-group col-lg-6 col-md-12">
@@ -151,7 +151,7 @@
                             <form action="{{ route('iheart.team_leader.apr') }}" method="post" id="aprForm">  
                                 {{ csrf_field() }}
                                 <input type="hidden" name="document_id" value="{{$document->id}}">
-                                <button type="submit" class="btn btn-default pull-right" id="aprBtn">승인</button>  
+                                <button type="button" class="btn btn-default pull-right" id="aprBtn">승인</button>  
                             </form>
                             @endif
                             
@@ -159,7 +159,7 @@
                     </div>
                     <div class="row">
                         @if($document->attachments->count() > 0)
-                            @foreach($document->attachments as $attachment)                                    
+                            @foreach($document->attachments as $attachment)
                             <div class="col-xs-6 col-md-3">
                                 <label for="{{ $attachment->origin_name }}">{{ $attachment->origin_name }}</label>
                                 <a id="{{$attachment->origin_name}}" class="thumbnail" style="cursor:pointer" onclick="javascript:window.open('{{ Storage::url($attachment->path) }}');">
@@ -222,20 +222,42 @@
         if(confirm("팀장 승인을 진행하시겠습니까?")) {
             alert('승인!');            
             $("#aprForm").submit();
+            return true;
         } else {
             alert('취소!');
+            return false;
         }        
     });
 
     $("#rejBtn").click(function () {
-        if(confirm("최종 반려 등록을 진행하시겠습니까?")) {                        
+        if(confirm("최종 반려 등록을 진행하시겠습니까?")) {  
+            var title = $("#title");      
+            if(title.val() == "") {
+                alert('제목을 입력하세요.');
+                title.focus();
+                return false;
+            }
+            var content = $("#content");     
+            if(content.val() == "") {
+                alert('반려사유를 입력하세요.');
+                content.focus();
+                return false;
+            }
             $("#rejectForm").submit();
         } else {
             alert('취소!');
         }
     });
+
+    $( document ).ready(function() {
+        // 총합 계산
+        var totalPrice = 0;
+        $("input[name=price]").each(function(idx) {
+            var price = $("input[name=price]:eq(" + idx + ")").val();
+            totalPrice += Number(price.replace(',', ''));
+        });
+        $("#totalPrice").text("합계 : " + totalPrice + "원");
+        
+    });
 </script>
 @endsection
-
-
-  

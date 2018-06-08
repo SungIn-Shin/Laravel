@@ -560,7 +560,7 @@
           <ul class="treeview-menu">
             <li>
               <a href="{{ url('/iheart/support_leader/documents/accountinglist')}}">
-                  <i class="fa fa-th"></i> <span>회계(?) 조회</span>                
+                  <i class="fa fa-th"></i> <span>회계 조회</span>                
               </a>    
             </li>
           </ul>

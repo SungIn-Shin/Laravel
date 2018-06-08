@@ -148,7 +148,7 @@
                                 </thead>
                                 <tbody  class="text-center">
                                     @foreach ($teams as $team)
-                                        <tr id="{{$team->id}}">
+                                        <tr id="{{$team->id}}" style="cursor:pointer;" onclick="location.href='{{url('/iheart/admin/teams/detail', $team->id)}}'">
                                             <td>{{ $team->sortkey}}</td>
                                             <td>{{ $team->name }}</td>
                                             <td>{{ $team->created_at }}</td>

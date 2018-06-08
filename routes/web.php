@@ -34,6 +34,10 @@ Route::group(['prefix' => 'iheart'], function (){
             Route::post('regist',           'TeamController@regist')->name('iheart.admin.teams.regist');
             // 팀 전체 조회            
             Route::get('show',              'TeamController@show')->name('iheart.admin.teams.show');
+            // 팀 상세조회
+            Route::get('detail/{team_id}',            'TeamController@detail')->name('iheart.admin.teams.detail');
+            // 팀 정보 수정
+            Route::post('update',            'TeamController@update')->name('iheart.admin.teams.update');
             // 팀 정렬 수정
             Route::post('update/sort',      'TeamController@updateSort')->name('iheart.admin.teams.update.sort');
         });

@@ -30,7 +30,7 @@
                         </div>          
                         <div class="form-group col-lg-4 col-md-12">
                             <label for="user_name">소속 : </label>
-                            <label id="user_name">{{$document->team->name}}</label>
+                            <label id="user_name">{{$team->name}}</label>
                             </select>            
                         </div>    
 
@@ -69,17 +69,17 @@
                                 </tr>
                             </thead>
                             <tbody>
-                                @foreach($expenditure_historys as $expens)
+                                @foreach($expenditure_historys as $index => $expens)
                                 @if(!empty($expens['item']) && !empty($expens['price']))
                                 <tr>
                                     <td class="text-center">
-                                        <input type="text" class="form-control" id="item1" name="item1" placeholder="항목1" value="{{$expens['item_name']}}({{ $expens['item']}})">
+                                        <input type="text" class="form-control" id="item{{$index}}" name="item" placeholder="항목1" value="{{$expens['item_name']}}({{ $expens['item']}})">
                                     </td>
                                     <td class="text-center">
-                                        <input type="text" class="form-control" id="content1" name="content1" placeholder="내용1" value="{{ $expens['content']}}">
+                                        <input type="text" class="form-control" id="content{{$index}}" name="content" placeholder="내용1" value="{{ $expens['content']}}">
                                     </td>
                                     <td class="text-center">
-                                        <input type="text" class="form-control" id="price1" name="price1" placeholder="금액1" value="{{ number_format($expens['price']) }}">
+                                        <input type="text" class="form-control" id="price{{$index}}" name="price" placeholder="금액1" value="{{ number_format($expens['price']) }}">
                                     </td>
                                 </tr>
                                 @endif
@@ -87,7 +87,7 @@
                                 
                             </tbody>
                             </table>
-                            {{-- <label for="" class="pull-right">합계 : {{$document->expenditureHistorys[0]->price + $document->expenditureHistorys[1]->price + $document->expenditureHistorys[2]->price}} 원</label> --}}
+                            <label id="totalPrice" for="" class="pull-right"></label>
                         </div>
                         <!-- 증빙서류 -->
                         <div class="form-group col-lg-6 col-md-12">
@@ -155,7 +155,8 @@
                                 </tr>
                                 @endforeach
                             @endif
-                            
+                            <button type="button" class="btn btn-default pull-right" data-dismiss="modal">수정</button>    
+                            <button type="button" class="btn btn-default pull-right" data-dismiss="modal">삭제</button>              
                         </div>
                     </div>
                     <div class="row">
@@ -225,6 +226,17 @@
             alert('취소!');
         }
     });
+    $( document ).ready(function() {
+        // 총합 계산
+        var totalPrice = 0;
+        $("input[name=price]").each(function(idx) {
+            var price = $("input[name=price]:eq(" + idx + ")").val();
+            totalPrice += Number(price.replace(',', ''));
+        });
+        $("#totalPrice").text("합계 : " + totalPrice + "원");
+        
+    });
+    
 </script>
 @endsection
 

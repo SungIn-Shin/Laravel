@@ -41,16 +41,16 @@ class TeamController extends Controller
     }
 
     // 팀 상세조회
-    public function detail(Request $request) {
-        $id = $request->team_id;
-        $team = Team::where('id', $id);
+    public function detail($team_id) {
+        $team = Team::where('id', $team_id)->first();
+        // dd($team);
         return view('iheart.admin.team.detail')->with('team', $team);
     }
 
     // 팀 정보 수정
     public function update(Request $request) {
-        $id = $request->team_id;
-        $team = Team::where('id', $id);
+        $id = $request->id;
+        $team = Team::where('id', $id)->first();
 
         if($request->has('name')) { 
             $team->name = $request->name;

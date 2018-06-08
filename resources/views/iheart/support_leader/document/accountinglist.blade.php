@@ -49,9 +49,17 @@
                                     <option value="">월 선택</option>
                                     @for($i = 1; $i <= 12 ; $i++) 
                                     @if ($request->month == $i) 
+                                        @if($i < 10)
+                                            <option value="0{{$i}}" selected>0{{$i}}월</option>
+                                        @else
                                         <option value="{{$i}}" selected>{{$i}}월</option>
+                                        @endif
                                     @else 
+                                        @if($i < 10)
+                                            <option value="0{{$i}}">0{{$i}}월</option>
+                                        @else
                                         <option value="{{$i}}">{{$i}}월</option>
+                                        @endif
                                     @endif
                                     @endfor
                                 </select>

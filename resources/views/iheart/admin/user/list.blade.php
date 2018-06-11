@@ -23,7 +23,7 @@
             <div class="box box-primary">                   
                 <div class="box-body">
                     <div class="row">                            
-                        <table class="table">
+                        <table class="table table-hover">
                             <thead>
                                 <tr>
                                     <tr>
@@ -33,23 +33,45 @@
                                         <th>직책</th>
                                         <th>이메일</th>
                                         <th>등록일시</th>
+                                        <th>최근로그인일자</th>
+                                        <th>최근7일로그인수</th>
                                         <th>사용여부</th>
                                     </tr>       
                                 </tr>                                    
                             </thead>
                             <tbody>
                                 @foreach ($users as $user)
-                                <tr id="tr{{$user->id}}" style="cursor:pointer;" onclick="location.href='{{url('/iheart/admin/users/detail', $user->id)}}'">
+                                <tr id="tr{{$user->id}}" style="cursor:pointer;" onclick="location.href='{{url('/iheart/admin/users/detail', $user->id)}}'"
+                                    @if ($user->useyn == 'N')
+                                        class="danger"
+                                    @endif
+                                    >
                                     <td>{{ $user->team->name }}</td>
                                     <td>{{ $user->name }}</td>
                                     <td>{{ $user->rank_name}}</td>
                                     <td>{{ $user->position_name}}</td>
                                     <td>{{ $user->email}}</td>
                                     <td>{{ $user->created_at}}</td>
-                                    @if (empty($user->deleted_at))
+                                    <td>
+                                        {{ $user->lastdate}}
+                                        @if (!empty($user->counter30) && $user->counter30 == 0)
+                                        <br><span class="text-danger">(최근30일이내로그인없음)</span>
+                                        @endif
+                                    </td>
+                                    @if (empty($user->counter7))
+                                        <td>0</td>
+                                    @else
+                                        <td>{{ $user->counter7 }}</td>
+                                    @endif
+                                    {{-- @if (empty($user->deleted_at))
                                         <td>사용중</td>
                                     @else
                                         <td>미사용</td>
+                                    @endif --}}
+                                    @if ($user->useyn == 'N')
+                                        <td><span class='text-danger'>미사용</span></td>
+                                    @else
+                                        <td><span class='text-success'>사용중</span></td>
                                     @endif
                                     
                                 </tr>

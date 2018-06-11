@@ -26,7 +26,7 @@
 <section class="content-header">
     <h1>
         로그
-        <small>로그인로그</small>
+        <small>REQUEST로그</small>
     </h1>
     <ol class="breadcrumb">
         <li><a href="#"><i class="fa fa-dashboard"></i> Home</a></li>
@@ -41,7 +41,7 @@
     <div class="row">
         <div class="col-lg-12">
             <div class="box box-primary">  
-                <form action="{{route('iheart.admin.log.loginList')}}" action="GET">
+                <form action="{{route('iheart.admin.log.requestList')}}" action="GET">
                     {{ csrf_field() }}
                     <div class="box-body">
                         <div class="row">
@@ -50,19 +50,12 @@
                                 <input id="created_at_start" name="created_at_start" data-provide="datepicker" data-date-format="yyyy-mm-dd" value="{{ request()->created_at_start }}">~
                                 <input id="created_at_end" name="created_at_end" data-provide="datepicker" data-date-format="yyyy-mm-dd" value="{{ request()->created_at_end }}">
                             </div>
-                            <div class="col-lg-3">
-                                <label for="user_name">성공실패</label>
-                                <select id="successyn" name="successyn" class="form-control">
-                                    <option value="">전체</option>
-                                    <option value="Y">성공</option>
-                                    <option value="N">실패</option>
-                                </select>
-                            </div>
                             <div class="col-lg-5">
                                 <label for="user_name">검색조건</label>
                                 <select id="condition" name="condition" class="form-control">
                                     <option value="useremail">계정</option>
                                     <option value="ip">IP</option>
+                                    <option value="url">URL</option>
                                 </select>
                                 <input type="text" id="search" name="search" class="form-group" value="{{ request()->search }}">
                                 <button type="submit" class="btn btn-default pull-right" id="aprBtn">검색</button> 
@@ -84,36 +77,32 @@
                             <thead>
                                 <tr>
                                     <tr>
-                                        <th>계정</th>
-                                        <th>IP</th>
-                                        <th>구분</th>
-                                        <th>성공실패</th>
-                                        <th>날짜</th>
+                                        <th class="col-lg-1">번호</th>
+                                        <th class="col-lg-1">계정</th>
+                                        <th class="col-lg-1">IP</th>
+                                        <th class="col-lg-5">URL</th>
+                                        <th class="col-lg-1">METHOD</th>
+                                        <th class="col-lg-2">AGENT</th>
+                                        <th class="col-lg-1">날짜</th>
                                     </tr>       
                                 </tr>                                    
                             </thead>
                             <tbody>
-                                @foreach ($loginhistories as $loginhistory)
+                                @foreach ($log_requests as $log_request)
                                 <tr>
-                                    <td>{{ $loginhistory->useremail }}</td>
-                                    <td>{{ $loginhistory->ip }}</td>
-                                    @if ($loginhistory->gubun == "U")
-                                        <td>사원</td>
-                                    @else
-                                        <td>Unknown</td>
-                                    @endif
-                                    @if ($loginhistory->successyn == "Y")
-                                        <td>성공</td>
-                                    @else
-                                        <td>실패</td>
-                                    @endif
-                                    <td>{{ $loginhistory->created_at}}</td>
+                                    <td>{{ $log_request->id }}</td>
+                                    <td>{{ $log_request->useremail }}</td>
+                                    <td>{{ $log_request->ip }}</td>
+                                    <td style="table-layout:fixed; word-break:break-all;">{{ $log_request->url }}</td>
+                                    <td>{{ $log_request->method }}</td>
+                                    <td style="table-layout:fixed; word-break:break-all;">{{ $log_request->agent }}</td>
+                                    <td>{{ $log_request->created_at}}</td>
                                 </tr>
                                 @endforeach
                             </tbody>
                         </table>
                     </div> <!-- /.row -->                
-                    <div class="text-center">{{ $loginhistories->appends(request()->query())->links() }}</div>                        
+                    <div class="text-center">{{ $log_requests->appends(request()->query())->links() }}</div>                        
                 </div>
             </div>          
         </div>                   

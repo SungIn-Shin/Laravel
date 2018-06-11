@@ -16,6 +16,9 @@ use App\Http\Requests\StoreUserPost;
 use App\Http\Requests\UpdateUserPost;
 use Illuminate\Http\Request;
 
+use App\Loginhistory;
+use DB;
+
 class UserController extends Controller
 {
     // 사용자 등록 폼
@@ -69,7 +72,22 @@ class UserController extends Controller
     // 사용자 리스트 조회
     public function showUsers(Request $request) 
     {
-        $users = User::paginate(10);
+        // 사용자정보 + 로그인 정보 (2018.04.17 KKW)
+        //    raw 쿼리 수정 필요.
+        // $users = User::paginate(10);
+        $todayMinusOneWeekAgo = \Carbon\Carbon::today()->subWeek();
+        $todayMinusOneMonthAgo = \Carbon\Carbon::today()->subMonth();
+        $users = User::select('users.*', 'loginhis.counter7', 'loginhis2.counter30', 'loginhis3.lastdate')
+            ->leftJoin(DB::raw("(SELECT useremail, COUNT(*) AS counter7 FROM loginhistories WHERE created_at >= '" .$todayMinusOneWeekAgo. "' AND successyn='Y' GROUP BY useremail) loginhis"), function($join) {
+                $join->on('users.email', '=', 'loginhis.useremail');
+            })
+            ->leftJoin(DB::raw("(SELECT useremail, COUNT(*) AS counter30 FROM loginhistories WHERE created_at >= '" .$todayMinusOneMonthAgo. "' AND successyn='Y' GROUP BY useremail) loginhis2"), function($join) {
+                $join->on('users.email', '=', 'loginhis2.useremail');
+            })
+            ->leftJoin(DB::raw("(SELECT useremail, MAX(created_at) AS lastdate FROM loginhistories WHERE successyn='Y' GROUP BY useremail) loginhis3"), function($join) {
+                $join->on('users.email', '=', 'loginhis3.useremail');
+            })
+            ->paginate(10);
         return view('iheart.admin.user.list')->with(["users" => $users]);
     }
 
@@ -109,6 +127,7 @@ class UserController extends Controller
                 'rank'      => 'required', 
                 'role'      => 'required',
                 'otpkey'    => 'nullable|min:16|max:16', // 2018.04.09 KKW
+                'useyn'     => 'required|string|min:1|max:1', // 2018.04.13 KKW
             ];
         } else {
             // 패스워드 미입력시 패스워드는 validation 제외
@@ -119,6 +138,7 @@ class UserController extends Controller
                 'rank'      => 'required',
                 'role'      => 'required',
                 'otpkey'    => 'nullable|min:16|max:16', // 2018.04.09 KKW
+                'useyn'     => 'required|string|min:1|max:1', // 2018.04.13 KKW
             ];
         }
 
@@ -139,6 +159,7 @@ class UserController extends Controller
                 $user->position_name = Position::where('id', $request->position)->first()->name;
             }
             $user->otpkey = $request->otpkey; // 2018.04.09 KKW
+            $user->useyn = $request->useyn; // 2018.04.13 KKW
 
             // 사용자의 기존 권한 제거 후 다시 권한 부여.
             // users(n) : roles(m) 구조이기에 1개의 권한만 주기위한 작업.
